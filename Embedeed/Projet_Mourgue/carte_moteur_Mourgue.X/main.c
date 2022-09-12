@@ -16,7 +16,6 @@ int main(void){
     InitTimer23();
     
     InitPWM();
-    PWMSetSpeed(20,1);
     
     
     LED_BLANCHE = 1 ;
