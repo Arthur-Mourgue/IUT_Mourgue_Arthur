@@ -30,13 +30,13 @@ IFS0bits.T3IF = 0; // Clear Timer3 Interrupt Flag
 LED_ORANGE = !LED_ORANGE;
 
 if(toggle == 0){
-    PWMSetSpeed(20,MOTEUR_GAUCHE);
-    PWMSetSpeed(20,MOTEUR_DROITE);
+    PWMSetSpeed(40,MOTEUR_GAUCHE);
+    PWMSetSpeed(40,MOTEUR_DROIT);
     toggle = 1 ;
 }
 else{
-    PWMSetSpeed(-20,MOTEUR_GAUCHE);
-    PWMSetSpeed(-20,MOTEUR_DROITE);
+    PWMSetSpeed(-40,MOTEUR_GAUCHE);
+    PWMSetSpeed(-40,MOTEUR_DROIT);
     toggle = 0 ;
 }
 }
@@ -52,7 +52,7 @@ T1CONbits.TCKPS = 0b10; //Prescaler
 //01 = 1:8 prescale value
 //00 = 1:1 prescale value
 T1CONbits.TCS = 0; //clock source = internal clock
-PR1 = 0xF424;
+PR1 = 0x186A;
 
 IFS0bits.T1IF = 0; // Clear Timer Interrupt Flag
 IEC0bits.T1IE = 1; // Enable Timer interrupt
@@ -64,4 +64,5 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void)
 {
 IFS0bits.T1IF = 0;
 LED_BLANCHE = !LED_BLANCHE;
+//PWMUpdateSpeed();
 }

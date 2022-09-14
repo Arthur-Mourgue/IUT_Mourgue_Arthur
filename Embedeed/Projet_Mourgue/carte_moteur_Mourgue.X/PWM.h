@@ -9,10 +9,11 @@
 #define	PWM_H
 
 #define MOTEUR_GAUCHE 0
-#define MOTEUR_DROITE 1
+#define MOTEUR_DROIT 1
 
 void InitPWM(void);
 void PWMSetSpeed(float vitesseEnPourcents, int moteur);
+void PWMUpdateSpeed();
 
 
 #endif	/* PWM_H */

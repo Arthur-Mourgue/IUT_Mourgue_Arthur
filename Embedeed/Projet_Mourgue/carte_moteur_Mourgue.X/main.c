@@ -22,6 +22,8 @@ int main(void){
     LED_BLEUE = 1;
     LED_ORANGE = 1;
     
+    //PWMSetSpeed(20,MOTEUR_DROITE);
+    
     while(1){
         
         //rien
