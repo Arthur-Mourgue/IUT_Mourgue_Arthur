@@ -7,7 +7,7 @@
 #include "ToolBox.h"
 
 #define PWMPER 40.0
-float acceleration = 50;
+float acceleration = 1;
 
 void InitPWM(void) {
     PTCON2bits.PCLKDIV = 0b000; //Divide by 1
@@ -29,6 +29,7 @@ void InitPWM(void) {
     PTCONbits.PTEN = 1;
 }
 
+/*
 void PWMSetSpeed(float vitesseEnPourcents, int moteur) {
     if (moteur == 0) {  //CHOIX DU MOTEUR 
         //Moteur Gauche
@@ -63,8 +64,15 @@ void PWMSetSpeed(float vitesseEnPourcents, int moteur) {
         }
         MOTEUR_DROIT_DUTY_CYCLE = Abs(robotState.vitesseDroiteCommandeCourante * PWMPER);
     }
+}*/
+void PWMSetSpeedConsigne(float vitesseEnPourcents, int moteur) {
+
+    if (moteur == MOTEUR_GAUCHE) {
+        robotState.vitesseGaucheConsigne = vitesseEnPourcents;
+    } else if (moteur == MOTEUR_DROIT)
+        robotState.vitesseDroiteConsigne = vitesseEnPourcents;
 }
-/*
+
 void PWMUpdateSpeed() {
     // Cette fonction est appelée sur timer et permet de suivre des rampes d?accélération
     if (robotState.vitesseDroiteCommandeCourante < robotState.vitesseDroiteConsigne)
@@ -79,7 +87,7 @@ void PWMUpdateSpeed() {
     if (robotState.vitesseDroiteCommandeCourante > 0) {
         MOTEUR_DROIT_L_PWM_ENABLE = 0; //pilotage de la pin en mode IO
         MOTEUR_DROIT_L_IO_OUTPUT = 1; //Mise à 1 de la pin
-        MOTEUR_DROIT_PWM_ENABLE_H = 1; //Pilotage de la pin en mode PWM
+        MOTEUR_DROIT_H_PWM_ENABLE = 1; //Pilotage de la pin en mode PWM
     } else {
         MOTEUR_DROIT_H_PWM_ENABLE = 0; //pilotage de la pin en mode IO
         MOTEUR_DROIT_H_IO_OUTPUT = 1; //Mise à 1 de la pin
@@ -106,4 +114,4 @@ void PWMUpdateSpeed() {
         MOTEUR_GAUCHE_L_PWM_ENABLE = 1; //Pilotage de la pin en mode PWM
     }
     MOTEUR_GAUCHE_DUTY_CYCLE = Abs(robotState.vitesseGaucheCommandeCourante) * PWMPER;
-}*/
+}
