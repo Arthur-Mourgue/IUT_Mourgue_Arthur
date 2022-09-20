@@ -1,6 +1,7 @@
 #include <xc.h>
 #include "adc.h"
 #include "ChipConfig.h"
+#include "IO.h"
 
 
 unsigned char ADCResultIndex = 0;
