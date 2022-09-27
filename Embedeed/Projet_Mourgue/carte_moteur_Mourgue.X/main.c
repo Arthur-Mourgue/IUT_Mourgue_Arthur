@@ -37,9 +37,9 @@ int main(void) {
             ADCClearConversionFinishedFlag();
             unsigned int *result = ADCGetResult();
             float volts = ((float) result[4])*3.3 / 4096 * 3.2;
-            robotState.distanceTelemetreGauche = 34 / volts - 5;
+            robotState.distanceTelemetreDroit2 = 34 / volts - 5;
             volts = ((float) result[3])*3.3 / 4096 * 3.2;
-            robotState.distanceTelemetreGauche = 34 / volts - 5;
+            robotState.distanceTelemetreDroit2 = 34 / volts - 5;
             volts = ((float) result[2])*3.3 / 4096 * 3.2;
             robotState.distanceTelemetreGauche = 34 / volts - 5;
             volts = ((float) result[1])*3.3 / 4096 * 3.2;
