@@ -1,4 +1,4 @@
- #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <xc.h>
 #include "ChipConfig.h"
@@ -40,27 +40,97 @@ unsigned long timestamp;
 unsigned char stateRobot;
 unsigned char state;
 
-void AcquireTelemetreKarnaugh(void){
-    state=0b00000;
-    if(robotState.distanceTelemetreGauche2 < 20){
-        state |= 0b10000 ;
+void AcquireTelemetreKarnaugh(void) {
+    state = 0b00000;
+    if (robotState.distanceTelemetreGauche2 < 20) {
+        state |= 0b10000;
     }
-    if(robotState.distanceTelemetreGauche < 20){
-        state |= 0b01000 ;
+    if (robotState.distanceTelemetreGauche < 20) {
+        state |= 0b01000;
     }
-    if(robotState.distanceTelemetreCentre < 20){
-        state |= 0b00100 ;
+    if (robotState.distanceTelemetreCentre < 20) {
+        state |= 0b00100;
     }
-    if(robotState.distanceTelemetreDroit < 20){
-        state |= 0b00010 ;
+    if (robotState.distanceTelemetreDroit < 20) {
+        state |= 0b00010;
     }
-    if(robotState.distanceTelemetreDroit2 < 20){
-        state |= 0b00001 ;
+    if (robotState.distanceTelemetreDroit2 < 20) {
+        state |= 0b00001;
     }
 }
 
-void OperatingSystemLoopkarnaugh(void){
-    
+void OperatingSystemLoopkarnaugh(void) {
+
+    switch (state) {
+        case 0b00001:
+            //Tourne Gauche+
+            break;
+        case 0b10000:
+            //Tourne Droite+
+            break;
+        case 0b00010:
+            //Tourne Gauche+++
+            break;
+        case 0b01000:
+            //Tourne Droite+++
+            break;   
+        case 0b00101:
+            //Tourne sur place Gauche
+            break;    
+        case 0b10100:
+            //Tourne sur place Droite
+            break;  
+        case 0b00110:
+            //Tourne Gauche++++
+            break;
+        case 0b01100:
+            //Tourne Droite++++
+            break;  
+        case 0b00111:
+            //Tourne sur place Gauche
+            break;
+        case 0b11100:
+            //Tourne sur place Droite
+            break;
+        case 0b01001:
+            //Tourne un peu Droite
+            break;
+        case 0b10010:
+            //Tourne un peu Gauche
+            break;
+        case 0b01111:
+            //Tourne un peu Gauche++
+            break;
+        case 0b11110:
+            //Tourne un peu Droite++
+            break;
+        case 0b01101:
+            //Tourne Gauche sur place
+            break;
+        case 0b10110:
+            //Tourne Droite sur place
+            break;
+        case 0b10111:
+            //Tourne Gauche sur place
+            break;
+        case 0b11101:
+            //Tourne Droite sur place
+            break;
+        case 0b11001:
+            //Tourne un peu Droite
+            break;
+        case 0b10011:
+            //Tourne un peu Gauche
+            break;
+        case 0b11101:
+            //Tourne sur place Droite
+            break;
+        case 0b10111:
+            //Tourne sur place Gauche
+            break;
+            
+    }
+
 }
 
 /*
@@ -182,4 +252,4 @@ void SetNextRobotStateInAutomaticMode() {
 
     
 }
-  */
+ */
