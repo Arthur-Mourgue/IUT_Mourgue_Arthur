@@ -3,9 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/ChipConfig.c</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/OS.c</file>
+            <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/timer.c</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/main.c</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/ADC.c</file>
+            <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/PWM.c</file>
+            <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/OS.h</file>
+            <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/Robot.c</file>
         </group>
     </open-files>
 </project-private>
