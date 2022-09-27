@@ -38,7 +38,32 @@
 unsigned long timestamp;
 
 unsigned char stateRobot;
+unsigned char state;
 
+void AcquireTelemetreKarnaugh(void){
+    state=0b00000;
+    if(robotState.distanceTelemetreGauche2 < 20){
+        state |= 0b10000 ;
+    }
+    if(robotState.distanceTelemetreGauche < 20){
+        state |= 0b01000 ;
+    }
+    if(robotState.distanceTelemetreCentre < 20){
+        state |= 0b00100 ;
+    }
+    if(robotState.distanceTelemetreDroit < 20){
+        state |= 0b00010 ;
+    }
+    if(robotState.distanceTelemetreDroit2 < 20){
+        state |= 0b00001 ;
+    }
+}
+
+void OperatingSystemLoopkarnaugh(void){
+    
+}
+
+/*
 void OperatingSystemLoop(void) {
     switch (stateRobot) {
         case STATE_ATTENTE:
@@ -53,8 +78,8 @@ void OperatingSystemLoop(void) {
             break;
 
         case STATE_AVANCE:
-            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
             stateRobot = STATE_AVANCE_EN_COURS;
             break;
         case STATE_AVANCE_EN_COURS:
@@ -157,3 +182,4 @@ void SetNextRobotStateInAutomaticMode() {
 
     
 }
+  */

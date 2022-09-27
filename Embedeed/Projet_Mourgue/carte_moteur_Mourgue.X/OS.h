@@ -10,6 +10,6 @@
 
 void OperatingSystemLoop(void);
 void SetNextRobotStateInAutomaticMode(void);
-
+void AcquireTelemetreKarnaugh(void)
 #endif	/* OS_H */
 
