@@ -58,137 +58,229 @@ void AcquireTelemetreKarnaugh(void) {
         state |= 0b00001;
     }
 }
-
 void OperatingSystemLoopkarnaugh(void) {
 
     switch (state) {
 
         case 0b00001:
             //Tourne un tout petit peu a Gauche
+            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(28, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b10000:
             //Tourne un tout petit peu a Droite
+            PWMSetSpeedConsigne(28, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b00010:
             //Tourne Gauche+++
+            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b01000:
             //Tourne Droite+++
+            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b00011:
             //Tourne Gauche++  ???????????
+            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b11000:
             //Tourne Droite++  ???????????
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b00101:
             //Tourne sur place Gauche
+            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b10100:
             //Tourne sur place Droite
+            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
         case 0b00110:
             //Tourne Gauche++++
+            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(5, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b01100:
             //Tourne Droite++++
+            PWMSetSpeedConsigne(5, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b00111:
             //Tourne sur place Gauche
+            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b11100:
             //Tourne sur place Droite
+            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b01001:
             //Tourne un peu vers la Droite
+            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b10010:
             //Tourne un peu vers la Gauche
+            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b01111:
             //Tourne sur place Gauche++
+            PWMSetSpeedConsigne(-20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b11110:
             //Tourne sur place Droite++
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-20, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b01101:
             //Tourne sur place Gauche
+            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b10110:
-            //Tourne sur place Droite++
+            //Tourne sur place Droite
+            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b10111:
-            //Tourne sur place Gauche
+            //Tourne sur place Gauche+
+            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-15, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b11101:
-            //Tourne sur place Droite
+            //Tourne sur place Droite+
+            PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b11001:
             //Tourne un peu a Droite
+            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b10011:
             //Tourne un peu a Gauche
+            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b11101:
             //Tourne sur place Droite
+            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b10111:
-            //Tourne sur place Droite
+            //Tourne sur place Gauche
+            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b10101:
             //Compare Gauche2 et Droite2
-            if(robotState.distanceTelemetreDroit2>robotState.distanceTelemetreGauche2){
+            if (robotState.distanceTelemetreDroit2 > robotState.distanceTelemetreGauche2) {
                 //Tourne a sur place Droite
-            }else{
+                PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            } else {
                 //Tourne sur place a Gauche
+                PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
             }
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b01110:
-            if(robotState.distanceTelemetreDroit2>robotState.distanceTelemetreGauche2){
+            if (robotState.distanceTelemetreDroit2 > robotState.distanceTelemetreGauche2) {
                 //Tourne a  Droite
-            }
-            else{
+                PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            } else {
                 //Tourne a sur place Gauche
+                PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
             }
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b11111:
             //Compare Tout les capteurs
-            if(robotState.distanceTelemetreDroit>robotState.distanceTelemetreGauche){
-                //Tourne a  Droite
+            if (robotState.distanceTelemetreDroit > robotState.distanceTelemetreGauche) {
+                //Tourne sur place a  Droite
+                PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            } else {
+                //Tourne sur place a sur place Gauche
+                PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
             }
-            else{
-                //Tourne a sur place Gauche
-            }
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b10001:
             //Compare droite et gauche +2 pour le moteur le plus loins
-            if(robotState.distanceTelemetreDroit2>robotState.distanceTelemetreGauche2){
+            if (robotState.distanceTelemetreDroit2 > robotState.distanceTelemetreGauche2) {
                 // +2 moteur gauche
-            }
-            else{
+                PWMSetSpeedConsigne(18, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            } else {
                 // +2 moteur droite
+                PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(18, MOTEUR_GAUCHE);
             }
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b11011:
             //Compare tout capteur et +2 pour le moteur le plus loins
-            if(robotState.distanceTelemetreDroit>robotState.distanceTelemetreGauche){
+            if (robotState.distanceTelemetreDroit > robotState.distanceTelemetreGauche) {
                 //+2 moteur  gauche
-            }
-            else{
+                PWMSetSpeedConsigne(18, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            } else {
                 //+2 moteur droite
+                PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(18, MOTEUR_GAUCHE);
             }
+            state = AcquireTelemetreKarnaugh();
             break;
         case 0b00000:
             //Avance
+            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
+            state = AcquireTelemetreKarnaugh();
             break;
-
-
-
 
     }
 
 }
 
-/*
+
 void OperatingSystemLoop(void) {
     switch (stateRobot) {
         case STATE_ATTENTE:
@@ -307,4 +399,4 @@ void SetNextRobotStateInAutomaticMode() {
 
     
 }
- */
+ 

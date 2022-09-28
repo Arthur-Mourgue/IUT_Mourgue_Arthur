@@ -9,7 +9,6 @@
 #include "Robot.h"
 #include "OS.h"
 
-unsigned int ADCValue0, ADCValue1, ADCValue2;
 unsigned int *result;
 
 int main(void) {
