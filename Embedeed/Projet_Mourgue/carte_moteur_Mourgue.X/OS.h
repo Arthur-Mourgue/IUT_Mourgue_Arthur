@@ -8,9 +8,9 @@
 #ifndef OS_H
 #define	OS_H
 
-void OperatingSystemLoop(void);
-void SetNextRobotStateInAutomaticMode(void);
-void AcquireTelemetreKarnaugh(void)
+//void OperatingSystemLoop(void);
+//void SetNextRobotStateInAutomaticMode(void);
+unsigned char AcquireTelemetreKarnaugh(void);
 void OperatingSystemLoopkarnaugh(void);
 #endif	/* OS_H */
 
