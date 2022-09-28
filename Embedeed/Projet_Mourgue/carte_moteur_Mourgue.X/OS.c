@@ -45,13 +45,13 @@ void AcquireTelemetreKarnaugh(void) {
     if (robotState.distanceTelemetreGauche2 < 20) {
         state |= 0b10000;
     }
-    if (robotState.distanceTelemetreGauche < 20) {
+    if (robotState.distanceTelemetreGauche < 40) {
         state |= 0b01000;
     }
-    if (robotState.distanceTelemetreCentre < 20) {
+    if (robotState.distanceTelemetreCentre < 35) {
         state |= 0b00100;
     }
-    if (robotState.distanceTelemetreDroit < 20) {
+    if (robotState.distanceTelemetreDroit < 40) {
         state |= 0b00010;
     }
     if (robotState.distanceTelemetreDroit2 < 20) {
@@ -62,30 +62,36 @@ void AcquireTelemetreKarnaugh(void) {
 void OperatingSystemLoopkarnaugh(void) {
 
     switch (state) {
+
         case 0b00001:
-            //Tourne Gauche+
+            //Tourne un tout petit peu a Gauche
             break;
         case 0b10000:
-            //Tourne Droite+
+            //Tourne un tout petit peu a Droite
             break;
         case 0b00010:
             //Tourne Gauche+++
             break;
         case 0b01000:
             //Tourne Droite+++
-            break;   
+            break;
+        case 0b00011:
+            //Tourne Gauche++  ???????????
+            break;
+        case 0b11000:
+            //Tourne Droite++  ???????????
+            break;
         case 0b00101:
             //Tourne sur place Gauche
-            break;    
+            break;
         case 0b10100:
             //Tourne sur place Droite
-            break;  
         case 0b00110:
             //Tourne Gauche++++
             break;
         case 0b01100:
             //Tourne Droite++++
-            break;  
+            break;
         case 0b00111:
             //Tourne sur place Gauche
             break;
@@ -93,42 +99,91 @@ void OperatingSystemLoopkarnaugh(void) {
             //Tourne sur place Droite
             break;
         case 0b01001:
-            //Tourne un peu Droite
+            //Tourne un peu vers la Droite
             break;
         case 0b10010:
-            //Tourne un peu Gauche
+            //Tourne un peu vers la Gauche
             break;
         case 0b01111:
-            //Tourne un peu Gauche++
+            //Tourne sur place Gauche++
             break;
         case 0b11110:
-            //Tourne un peu Droite++
+            //Tourne sur place Droite++
             break;
         case 0b01101:
-            //Tourne Gauche sur place
+            //Tourne sur place Gauche
             break;
         case 0b10110:
-            //Tourne Droite sur place
+            //Tourne sur place Droite++
             break;
         case 0b10111:
-            //Tourne Gauche sur place
+            //Tourne sur place Gauche
             break;
         case 0b11101:
-            //Tourne Droite sur place
+            //Tourne sur place Droite
             break;
         case 0b11001:
-            //Tourne un peu Droite
+            //Tourne un peu a Droite
             break;
         case 0b10011:
-            //Tourne un peu Gauche
+            //Tourne un peu a Gauche
             break;
         case 0b11101:
             //Tourne sur place Droite
             break;
         case 0b10111:
-            //Tourne sur place Gauche
+            //Tourne sur place Droite
             break;
-            
+        case 0b10101:
+            //Compare Gauche2 et Droite2
+            if(robotState.distanceTelemetreDroit2>robotState.distanceTelemetreGauche2){
+                //Tourne a sur place Droite
+            }else{
+                //Tourne sur place a Gauche
+            }
+            break;
+        case 0b01110:
+            if(robotState.distanceTelemetreDroit2>robotState.distanceTelemetreGauche2){
+                //Tourne a  Droite
+            }
+            else{
+                //Tourne a sur place Gauche
+            }
+            break;
+        case 0b11111:
+            //Compare Tout les capteurs
+            if(robotState.distanceTelemetreDroit>robotState.distanceTelemetreGauche){
+                //Tourne a  Droite
+            }
+            else{
+                //Tourne a sur place Gauche
+            }
+            break;
+        case 0b10001:
+            //Compare droite et gauche +2 pour le moteur le plus loins
+            if(robotState.distanceTelemetreDroit2>robotState.distanceTelemetreGauche2){
+                // +2 moteur gauche
+            }
+            else{
+                // +2 moteur droite
+            }
+            break;
+        case 0b11011:
+            //Compare tout capteur et +2 pour le moteur le plus loins
+            if(robotState.distanceTelemetreDroit>robotState.distanceTelemetreGauche){
+                //+2 moteur  gauche
+            }
+            else{
+                //+2 moteur droite
+            }
+            break;
+        case 0b00000:
+            //Avance
+            break;
+
+
+
+
     }
 
 }
