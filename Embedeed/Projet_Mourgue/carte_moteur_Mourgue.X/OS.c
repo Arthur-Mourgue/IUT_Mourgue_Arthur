@@ -30,246 +30,69 @@
 #define STATE_RECULE 14
 #define STATE_RECULE_EN_COURS 15
 
+#define STATE_RECULE_UN_PEU_GAUCHE 20
+#define STATE_RECULE_UN_PEU_GAUCHE_EN_COURS 21
+#define STATE_RECULE_UN_PEU_DROITE 22
+#define STATE_RECULE_UN_PEU_DROITE_EN_COURS 23
+#define STATE_TOURNE_UN_PEU_GAUCHE 24
+#define STATE_TOURNE_UN_PEU_GAUCHE_EN_COURS 25
+#define STATE_TOURNE_UN_PEU_DROITE 26
+#define STATE_TOURNE_UN_PEU_DROITE_EN_COURS 27
+
+
 #define PAS_D_OBSTACLE 0
 #define OBSTACLE_A_GAUCHE 1
 #define OBSTACLE_A_DROITE 2
 #define OBSTACLE_EN_FACE 3
 
 unsigned long timestamp;
-
+unsigned long lasttimestamp;
 unsigned char stateRobot;
-unsigned char state;
-
-unsigned char AcquireTelemetreVerite(void) {
-    state = 0b00000;
-    if (robotState.distanceTelemetreGauche2 < 30) {
-        state |= 0b10000;
-    }
-    if (robotState.distanceTelemetreGauche < 40) {
-        state |= 0b01000;
-    }
-    if (robotState.distanceTelemetreCentre < 35) {
-        state |= 0b00100;
-    }
-    if (robotState.distanceTelemetreDroit < 40) {
-        state |= 0b00010;
-    }
-    if (robotState.distanceTelemetreDroit2 < 30) {
-        state |= 0b00001;
-    }
-    return state;
-}
-void OperatingSystemLoopVerite(void) {
-
-    switch (state) {
-
-        case 0b00001:
-            //Tourne un tout petit peu a Gauche
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b10000:
-            //Tourne un tout petit peu a Droite
-            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b00010:
-            //Tourne Gauche+++
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b01000:
-            //Tourne Droite+++
-            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b00011:
-            //Tourne Gauche++  ???????????
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b11000:
-            //Tourne Droite++  ???????????
-            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b00101:
-            //Tourne sur place Gauche
-            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b10100:
-            //Tourne sur place Droite
-            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-        case 0b00110:
-            //Tourne Gauche++++
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(5, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b01100:
-            //Tourne Droite++++
-            PWMSetSpeedConsigne(5, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b00111:
-            //Tourne sur place Gauche
-            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b11100:
-            //Tourne sur place Droite
-            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b01001:
-            //Tourne un peu vers la Droite
-            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b10010:
-            //Tourne un peu vers la Gauche
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b01111:
-            //Tourne sur place Gauche++
-            PWMSetSpeedConsigne(-20, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b11110:
-            //Tourne sur place Droite++
-            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(-20, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b01101:
-            //Tourne sur place Gauche
-            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b10110:
-            //Tourne sur place Droite
-            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b10111:
-            //Tourne sur place Gauche+
-            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(-15, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b11101:
-            //Tourne sur place Droite+
-            PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b11001:
-            //Tourne un peu a Droite
-            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b10011:
-            //Tourne un peu a Gauche
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b10101:
-            //Compare Gauche2 et Droite2
-            if (robotState.distanceTelemetreDroit2 > robotState.distanceTelemetreGauche2) {
-                //Tourne a sur place Droite
-                PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
-            } else {
-                //Tourne sur place a Gauche
-                PWMSetSpeedConsigne(10, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
-            }
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b01110:
-            if (robotState.distanceTelemetreDroit2 > robotState.distanceTelemetreGauche2) {
-                //Tourne a  Droite
-                PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
-            } else {
-                //Tourne a sur place Gauche
-                PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
-            }
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b11111:
-            //Compare Tout les capteurs
-            if (robotState.distanceTelemetreDroit > robotState.distanceTelemetreGauche) {
-                //Tourne sur place a  Droite
-                PWMSetSpeedConsigne(10, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
-            } else {
-                //Tourne sur place a sur place Gauche
-                PWMSetSpeedConsigne(20, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
-            }
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b10001:
-            //Compare droite et gauche +2 pour le moteur le plus loins
-            if (robotState.distanceTelemetreDroit2 > robotState.distanceTelemetreGauche2) {
-                // +2 moteur gauche
-                PWMSetSpeedConsigne(18, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
-            } else {
-                // +2 moteur droite
-                PWMSetSpeedConsigne(20, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(18, MOTEUR_GAUCHE);
-            }
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b11011:
-            //Compare tout capteur et +2 pour le moteur le plus loins
-            if (robotState.distanceTelemetreDroit > robotState.distanceTelemetreGauche) {
-                //+2 moteur  gauche
-                PWMSetSpeedConsigne(18, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
-            } else {
-                //+2 moteur droite
-                PWMSetSpeedConsigne(20, MOTEUR_DROIT);
-                PWMSetSpeedConsigne(18, MOTEUR_GAUCHE);
-            }
-            state = AcquireTelemetreVerite();
-            break;
-        case 0b00000:
-            //Avance
-            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
-            state = AcquireTelemetreVerite();
-            break;
-
-    }
-
-}
 
 /*
+float TeleCentre,TeleGauche,TeleGauche2,TeleDroit,TeleDroit2;
+
+void TelemetreForMoteur(void) {
+    
+    TeleCentre = robotState.distanceTelemetreCentre;
+    TeleGauche = robotState.distanceTelemetreGauche;
+    TeleGauche2 = robotState.distanceTelemetreGauche2;
+    TeleDroit= robotState.distanceTelemetreDroit;
+    TeleDroit= robotState.distanceTelemetreDroit2;
+
+    if (robotState.distanceTelemetreCentre < 10) {
+        //Tourne a 180°
+    }
+    if (robotState.distanceTelemetreGauche < 10) {
+        PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+        PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
+    }
+    if (robotState.distanceTelemetreDroit < 10) {
+        PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+        PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+    }
+    if (robotState.distanceTelemetreGauche2 < 10) {
+        PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+        PWMSetSpeedConsigne(-5, MOTEUR_GAUCHE);
+    }
+    if (robotState.distanceTelemetreDroit2 < 10) {
+        PWMSetSpeedConsigne(-5, MOTEUR_DROIT);
+        PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+    }
+    if (robotState.distanceTelemetreCentre < 40) {
+        PWMSetSpeedConsigne((TeleDroit*25/40), MOTEUR_DROIT);
+        PWMSetSpeedConsigne((TeleGauche*25/40), MOTEUR_GAUCHE);
+    }
+    if (robotState.distanceTelemetreDroit > 40 &&
+            robotState.distanceTelemetreCentre > 40 &&
+            robotState.distanceTelemetreGauche > 40) {
+        PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+        PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+    }
+
+}
+ */
+
 void OperatingSystemLoop(void) {
     switch (stateRobot) {
         case STATE_ATTENTE:
@@ -284,8 +107,8 @@ void OperatingSystemLoop(void) {
             break;
 
         case STATE_AVANCE:
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
             stateRobot = STATE_AVANCE_EN_COURS;
             break;
         case STATE_AVANCE_EN_COURS:
@@ -343,7 +166,39 @@ void OperatingSystemLoop(void) {
         case STATE_RECULE_PAR_DROITE_EN_COURS:
             SetNextRobotStateInAutomaticMode();
             break;
-
+        case STATE_RECULE_UN_PEU_DROITE:
+            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            stateRobot = STATE_RECULE_PAR_DROITE_EN_COURS;
+            break;
+        case STATE_RECULE_UN_PEU_DROITE_EN_COURS:
+            SetNextRobotStateInAutomaticMode();
+            break;
+        case STATE_RECULE_UN_PEU_GAUCHE:
+            PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
+            stateRobot = STATE_RECULE_UN_PEU_GAUCHE_EN_COURS;
+            break;
+        case STATE_RECULE_UN_PEU_GAUCHE_EN_COURS:
+            SetNextRobotStateInAutomaticMode();
+            break;
+        case STATE_TOURNE_UN_PEU_GAUCHE:
+            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            stateRobot = STATE_TOURNE_UN_PEU_GAUCHE_EN_COURS;
+            break;
+        case STATE_TOURNE_UN_PEU_GAUCHE_EN_COURS:
+            SetNextRobotStateInAutomaticMode();
+            break;
+        case STATE_TOURNE_UN_PEU_DROITE:
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
+            stateRobot = STATE_TOURNE_UN_PEU_DROITE_EN_COURS;
+            break;
+        case STATE_TOURNE_UN_PEU_DROITE_EN_COURS:
+            SetNextRobotStateInAutomaticMode();
+            break;
+            
         default:
             stateRobot = STATE_ATTENTE;
             break;
@@ -353,43 +208,256 @@ void OperatingSystemLoop(void) {
 unsigned char nextStateRobot = 0;
 
 void SetNextRobotStateInAutomaticMode() {
-    unsigned char positionObstacle = PAS_D_OBSTACLE;
 
     //Détermination de la position des obstacles en fonction des télémètres
-    if (robotState.distanceTelemetreDroit < 30 &&
-            robotState.distanceTelemetreCentre > 20 &&
-            robotState.distanceTelemetreGauche > 30) //Obstacle à droite
-        positionObstacle = OBSTACLE_A_DROITE;
-    else if (robotState.distanceTelemetreDroit > 30 &&
-            robotState.distanceTelemetreCentre > 20 &&
-            robotState.distanceTelemetreGauche < 30) //Obstacle à gauche
-        positionObstacle = OBSTACLE_A_GAUCHE;
-    else if (robotState.distanceTelemetreCentre < 20) //Obstacle en face
-        positionObstacle = OBSTACLE_EN_FACE;
-    else if (robotState.distanceTelemetreDroit > 30 &&
-            robotState.distanceTelemetreCentre > 20 &&
-            robotState.distanceTelemetreGauche > 30) //pas d?obstacle
-        positionObstacle = PAS_D_OBSTACLE;
-
-    //Détermination de l?état à venir du robot
-    if (positionObstacle == PAS_D_OBSTACLE)
-        nextStateRobot = STATE_AVANCE;
-    else if (positionObstacle == OBSTACLE_A_DROITE)
-        nextStateRobot = STATE_TOURNE_GAUCHE;
-    else if (positionObstacle == OBSTACLE_A_GAUCHE)
+    if (robotState.distanceTelemetreCentre < 10) {
+        //Tourne a 180°
+    } else if (robotState.distanceTelemetreGauche < 10) {
+        //Recule par la droite
+        nextStateRobot = STATE_RECULE_PAR_DROITE;
+    } else if (robotState.distanceTelemetreDroit < 10) {
+        //Recule par la gauche
+        nextStateRobot = STATE_RECULE_PAR_GAUCHE;
+    } else if (robotState.distanceTelemetreGauche2 < 10) {
+        //Recule un peu par la droite
+        nextStateRobot = STATE_RECULE_UN_PEU_DROITE;
+    } else if (robotState.distanceTelemetreDroit2 < 10) {
+        //Recule un peu par la gauche
+        nextStateRobot = STATE_RECULE_UN_PEU_GAUCHE;
+    } else if (robotState.distanceTelemetreDroit < 20 &&
+            robotState.distanceTelemetreGauche > 30 &&
+            robotState.distanceTelemetreGauche2 > 30 &&
+            robotState.distanceTelemetreCentre > 30) {
+        //Tourne a droite car aucun obstacle(main)
         nextStateRobot = STATE_TOURNE_DROITE;
-    else if (positionObstacle == OBSTACLE_EN_FACE)
-        nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
-
-    //Si l?on n?est pas dans la transition de l?étape en cours
-    if (nextStateRobot != stateRobot - 1) { 
-        stateRobot = nextStateRobot;
+    } else if (robotState.distanceTelemetreGauche < 20 &&
+            robotState.distanceTelemetreDroit > 30 &&
+            robotState.distanceTelemetreDroit > 30 &&
+            robotState.distanceTelemetreCentre > 30) {
+        //Tourne a gauche car aucun obstacle (main)
+        nextStateRobot = STATE_TOURNE_GAUCHE;
+    } else if (robotState.distanceTelemetreDroit2 < 20 &&
+            robotState.distanceTelemetreDroit > 25 &&
+            robotState.distanceTelemetreGauche > 30 &&
+            robotState.distanceTelemetreGauche2 > 30 &&
+            robotState.distanceTelemetreCentre > 30) {
+        //Tourne un peu vers la gauche
+        nextStateRobot = STATE_TOURNE_UN_PEU_GAUCHE;
+    } else if (robotState.distanceTelemetreGauche2 < 20 &&
+            robotState.distanceTelemetreDroit > 25 &&
+            robotState.distanceTelemetreGauche > 20 &&
+            robotState.distanceTelemetreDroit2 > 30 &&
+            robotState.distanceTelemetreCentre > 30) {
+        //Tourne un peu vers la droite
+        nextStateRobot = STATE_TOURNE_UN_PEU_DROITE;
+    } else {
+        //Avance
+        nextStateRobot = STATE_AVANCE;
     }
 
-    
+    //Si l?on n?est pas dans la transition de l?étape en cours
+    if (nextStateRobot != stateRobot - 1) {
+        stateRobot = nextStateRobot;
+    }
 }
-unsigned int Telemetre;
-int Fct(Telemetre){
-    
+
+
+
+
+//unsigned char state;
+/*
+unsigned char AcquireTelemetreVerite(void) {
+    state = 0b00000;
+    if (robotState.distanceTelemetreGauche2 < 30) {
+        state |= 0b10000;
+    }
+    if (robotState.distanceTelemetreGauche < 40) {
+        state |= 0b01000;
+    }
+    if (robotState.distanceTelemetreCentre < 40) {
+        state |= 0b00100;
+    }
+    if (robotState.distanceTelemetreDroit < 40) {
+        state |= 0b00010;
+    }
+    if (robotState.distanceTelemetreDroit2 < 30) {
+        state |= 0b00001;
+    }
+    return state;
 }
-*/
+
+void OperatingSystemLoopVerite(void) {
+    state = AcquireTelemetreVerite();
+    switch (state) {        
+        case 0b00001:
+            //Tourne un tout petit peu a Gauche
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
+            break;
+        case 0b10000:
+            //Tourne un tout petit peu a Droite
+            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            break;
+        case 0b00010:
+            //Tourne Gauche+++
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+            break;
+        case 0b01000:
+            //Tourne Droite+++
+            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+            break;
+        case 0b00011:
+            //Tourne Gauche++  ???????????
+            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+            break;
+        case 0b11000:
+            //Tourne Droite++  ???????????
+            PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+            break;
+        case 0b00101:
+            //Tourne sur place Gauche
+            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+            break;
+        case 0b10100:
+            //Tourne sur place Droite
+            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+        case 0b00110:
+            //Tourne Gauche++++
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+            break;
+        case 0b01100:
+            //Tourne Droite++++
+            PWMSetSpeedConsigne(0, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+            break;
+        case 0b00111:
+            //Tourne sur place Gauche
+            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-15, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+            break;
+        case 0b11100:
+            //Tourne sur place Droite
+            PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
+            //state = AcquireTelemetreVerite();
+            break;
+        case 0b01001:
+            //Tourne un peu vers la Droite
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(22, MOTEUR_GAUCHE);
+            break;
+        case 0b10010:
+            //Tourne un peu vers la Gauche
+            PWMSetSpeedConsigne(22, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            break;
+        case 0b01111:
+            //Tourne sur place Gauche++
+            PWMSetSpeedConsigne(15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-15, MOTEUR_GAUCHE);
+            break;
+        case 0b11110:
+            //Tourne sur place Droite++
+            PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
+            break;
+        case 0b01101:
+            //Tourne sur place Gauche
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-20, MOTEUR_GAUCHE);
+            break;
+        case 0b10110:
+            //Tourne sur place Droite
+            PWMSetSpeedConsigne(-20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            break;
+        case 0b10111:
+            //Tourne sur place Gauche+
+            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
+            break;
+        case 0b11101:
+            //Tourne sur place Droite+
+            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            break;
+        case 0b11001:
+            //Tourne un peu a Droite
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(22, MOTEUR_GAUCHE);
+            break;
+        case 0b10011:
+            //Tourne un peu a Gauche
+            PWMSetSpeedConsigne(22, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            break;
+        case 0b00100:
+            //Compare Gauche2 et Droite2
+                PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(-30, MOTEUR_GAUCHE);
+            break;
+        case 0b10101:
+            //Compare Gauche2 et Droite2
+                PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(-30, MOTEUR_GAUCHE);
+            break;
+        case 0b01110:
+            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-30, MOTEUR_GAUCHE);
+            break;
+        case 0b11111:
+            //180°
+            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-30, MOTEUR_GAUCHE);
+                
+            break;
+        case 0b10001:
+            //Compare droite et gauche +2 pour le moteur le plus loins
+            if (robotState.distanceTelemetreDroit2 > robotState.distanceTelemetreGauche2) {
+                // +2 moteur gauche
+                PWMSetSpeedConsigne(18, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            } else {
+                // +2 moteur droite
+                PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(18, MOTEUR_GAUCHE);
+            }
+            break;
+        case 0b11011:
+            //Compare tout capteur et +2 pour le moteur le plus loins
+            if (robotState.distanceTelemetreDroit > robotState.distanceTelemetreGauche) {
+                //+2 moteur  gauche
+                PWMSetSpeedConsigne(15, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            } else {
+                //+2 moteur droite
+                PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+                PWMSetSpeedConsigne(15, MOTEUR_GAUCHE);
+            }
+            break;
+        case 0b00000:
+            //Avance
+            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
+            break;
+    }
+
+}
+ */

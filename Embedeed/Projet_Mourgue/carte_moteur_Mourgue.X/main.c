@@ -28,7 +28,7 @@ int main(void) {
     LED_BLEUE = 1;
     LED_ORANGE = 1;
     
-    AcquireTelemetreVerite();
+    //AcquireTelemetreVerite();
     //PWMSetSpeed(20,MOTEUR_DROITE);
 
     while (1) {
@@ -48,7 +48,7 @@ int main(void) {
             robotState.distanceTelemetreDroit2 = 34 / volts - 5;
 
 
-            if (robotState.distanceTelemetreDroit2< 30 || robotState.distanceTelemetreDroit< 30){
+            if (robotState.distanceTelemetreDroit2< 30){
                 LED_ORANGE = 1;
             } else {
                 LED_ORANGE = 0;
@@ -58,7 +58,7 @@ int main(void) {
             } else {
                 LED_BLEUE = 0;
             }
-            if (robotState.distanceTelemetreGauche2< 30 || robotState.distanceTelemetreGauche< 30) {
+            if (robotState.distanceTelemetreGauche2< 30) {
                 LED_BLANCHE = 1;
             } else {
                 LED_BLANCHE = 0;

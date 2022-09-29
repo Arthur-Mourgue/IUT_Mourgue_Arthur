@@ -33,16 +33,16 @@ void InitTimer23(void) {
 void __attribute__((interrupt, no_auto_psv)) _T3Interrupt(void) {
     IFS0bits.T3IF = 0; // Clear Timer3 Interrupt Flag
 
-/*
-    if (toggle == 0) {
-        PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
-        PWMSetSpeedConsigne(20, MOTEUR_DROIT);
-        toggle = 1;
-    } else {
-        PWMSetSpeedConsigne(-20, MOTEUR_GAUCHE);
-        PWMSetSpeedConsigne(-20, MOTEUR_DROIT);
-        toggle = 0;
-    }*/
+    /*
+        if (toggle == 0) {
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            toggle = 1;
+        } else {
+            PWMSetSpeedConsigne(-20, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(-20, MOTEUR_DROIT);
+            toggle = 0;
+        }*/
 }
 
 //Initialisation d?un timer 16 bits
@@ -59,7 +59,7 @@ void InitTimer1(void) {
     IFS0bits.T1IF = 0; // Clear Timer Interrupt Flag
     IEC0bits.T1IE = 1; // Enable Timer interrupt
     T1CONbits.TON = 1; // Enable Timer
-    SetFreqTimer1(50);
+    SetFreqTimer1(250);
 }
 
 void InitTimer4(void) {
@@ -83,16 +83,14 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
     IFS0bits.T1IF = 0;
     PWMUpdateSpeed();
     ADC1StartConversionSequence();
-
 }
 
 //Interruption du timer 4
 
 void __attribute__((interrupt, no_auto_psv)) _T4Interrupt(void) {
     IFS1bits.T4IF = 0;
-    LED_BLEUE = !LED_BLEUE;
     timestamp++;
-    OperatingSystemLoopVerite();
+    OperatingSystemLoop();
 }
 
 void SetFreqTimer1(float freq) {
