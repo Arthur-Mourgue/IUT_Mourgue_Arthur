@@ -39,6 +39,10 @@
 #define STATE_TOURNE_UN_PEU_DROITE 26
 #define STATE_TOURNE_UN_PEU_DROITE_EN_COURS 27
 
+#define STATE_TOURNE_BCP_GAUCHE 28
+#define STATE_TOURNE_BCP_GAUCHE_EN_COURS 29
+#define STATE_TOURNE_BCP_DROITE 30
+#define STATE_TOURNE_BCP_DROITE_EN_COURS 31 
 
 #define PAS_D_OBSTACLE 0
 #define OBSTACLE_A_GAUCHE 1
@@ -167,7 +171,7 @@ void OperatingSystemLoop(void) {
             SetNextRobotStateInAutomaticMode();
             break;
         case STATE_RECULE_UN_PEU_DROITE:
-            PWMSetSpeedConsigne(-10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
             PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
             stateRobot = STATE_RECULE_PAR_DROITE_EN_COURS;
             break;
@@ -176,7 +180,7 @@ void OperatingSystemLoop(void) {
             break;
         case STATE_RECULE_UN_PEU_GAUCHE:
             PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(-10, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(-15, MOTEUR_GAUCHE);
             stateRobot = STATE_RECULE_UN_PEU_GAUCHE_EN_COURS;
             break;
         case STATE_RECULE_UN_PEU_GAUCHE_EN_COURS:
@@ -198,7 +202,23 @@ void OperatingSystemLoop(void) {
         case STATE_TOURNE_UN_PEU_DROITE_EN_COURS:
             SetNextRobotStateInAutomaticMode();
             break;
-            
+        case STATE_TOURNE_BCP_DROITE:
+            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(25, MOTEUR_GAUCHE);
+            stateRobot = STATE_TOURNE_BCP_DROITE_EN_COURS;
+            break;
+        case STATE_TOURNE_BCP_DROITE_EN_COURS:
+            SetNextRobotStateInAutomaticMode();
+            break;
+         case STATE_TOURNE_BCP_GAUCHE:
+            PWMSetSpeedConsigne(25, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            stateRobot = STATE_TOURNE_BCP_GAUCHE_EN_COURS;
+            break;
+        case STATE_TOURNE_BCP_GAUCHE_EN_COURS:
+            SetNextRobotStateInAutomaticMode();
+            break;
+
         default:
             stateRobot = STATE_ATTENTE;
             break;
@@ -224,33 +244,50 @@ void SetNextRobotStateInAutomaticMode() {
     } else if (robotState.distanceTelemetreDroit2 < 10) {
         //Recule un peu par la gauche
         nextStateRobot = STATE_RECULE_UN_PEU_GAUCHE;
-    } else if (robotState.distanceTelemetreDroit < 20 &&
-            robotState.distanceTelemetreGauche > 30 &&
-            robotState.distanceTelemetreGauche2 > 30 &&
-            robotState.distanceTelemetreCentre > 30) {
+    } else if (robotState.distanceTelemetreDroit < 30 &&
+            robotState.distanceTelemetreGauche > 20 &&
+            robotState.distanceTelemetreGauche2 > 20 &&
+            robotState.distanceTelemetreCentre > 20) {
         //Tourne a droite car aucun obstacle(main)
-        nextStateRobot = STATE_TOURNE_DROITE;
-    } else if (robotState.distanceTelemetreGauche < 20 &&
-            robotState.distanceTelemetreDroit > 30 &&
-            robotState.distanceTelemetreDroit > 30 &&
-            robotState.distanceTelemetreCentre > 30) {
-        //Tourne a gauche car aucun obstacle (main)
         nextStateRobot = STATE_TOURNE_GAUCHE;
-    } else if (robotState.distanceTelemetreDroit2 < 20 &&
-            robotState.distanceTelemetreDroit > 25 &&
-            robotState.distanceTelemetreGauche > 30 &&
-            robotState.distanceTelemetreGauche2 > 30 &&
-            robotState.distanceTelemetreCentre > 30) {
+    } else if (robotState.distanceTelemetreGauche < 30 &&
+            robotState.distanceTelemetreDroit > 20 &&
+            robotState.distanceTelemetreDroit > 20 &&
+            robotState.distanceTelemetreCentre > 20) {
+        //Tourne a gauche car aucun obstacle (main)
+        nextStateRobot = STATE_TOURNE_DROITE;
+    } else if (robotState.distanceTelemetreDroit2 < 30 &&
+            robotState.distanceTelemetreDroit > 20 &&
+            robotState.distanceTelemetreGauche > 20 &&
+            robotState.distanceTelemetreGauche2 > 20 &&
+            robotState.distanceTelemetreCentre > 20) {
         //Tourne un peu vers la gauche
         nextStateRobot = STATE_TOURNE_UN_PEU_GAUCHE;
-    } else if (robotState.distanceTelemetreGauche2 < 20 &&
-            robotState.distanceTelemetreDroit > 25 &&
+    } else if (robotState.distanceTelemetreGauche2 < 30 &&
+            robotState.distanceTelemetreDroit > 20 &&
             robotState.distanceTelemetreGauche > 20 &&
             robotState.distanceTelemetreDroit2 > 30 &&
-            robotState.distanceTelemetreCentre > 30) {
+            robotState.distanceTelemetreCentre > 20) {
         //Tourne un peu vers la droite
         nextStateRobot = STATE_TOURNE_UN_PEU_DROITE;
-    } else {
+    } else if (robotState.distanceTelemetreCentre < 30 &&
+            robotState.distanceTelemetreDroit > 20 &&
+            robotState.distanceTelemetreGauche > 20) {
+        if (robotState.distanceTelemetreDroit > robotState.distanceTelemetreGauche) {
+            nextStateRobot = STATE_TOURNE_GAUCHE;
+        } else {
+            nextStateRobot = STATE_TOURNE_DROITE;
+        }
+    }
+    else if(robotState.distanceTelemetreCentre < 30){
+        if (robotState.distanceTelemetreDroit2 > robotState.distanceTelemetreGauche2) {
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+        } else {
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+        }
+    }
+
+    else {
         //Avance
         nextStateRobot = STATE_AVANCE;
     }
