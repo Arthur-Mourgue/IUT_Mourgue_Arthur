@@ -33,7 +33,7 @@ int main(void) {
 
     while (1) {
 
-        if (ADCIsConversionFinished() == 1) {
+         if (ADCIsConversionFinished() == 1) {
             ADCClearConversionFinishedFlag();
             unsigned int *result = ADCGetResult();
             float volts = ((float) result[4])*3.3 / 4096 * 3.2;

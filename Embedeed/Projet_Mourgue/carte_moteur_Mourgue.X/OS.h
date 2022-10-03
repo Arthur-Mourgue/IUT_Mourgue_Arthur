@@ -11,7 +11,7 @@
 void TelemetreForMoteur(void);
 void OperatingSystemLoop(void);
 void SetNextRobotStateInAutomaticMode(void);
-//unsigned char AcquireTelemetreVerite(void);
+unsigned char AcquireTelemetreVerite(void);
 //void OperatingSystemLoopVerite(void);
 #endif	/* OS_H */
 
