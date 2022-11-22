@@ -1,0 +1,29 @@
+﻿<Window x:Class="Arthur_Mourgue_RobotInterface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Arthur_Mourgue_RobotInterface"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="Emission" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0">
+            <TextBox x:Name="TextBoxEmission" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" KeyUp="TextBoxEmission_KeyUp" />
+        </GroupBox>
+        <GroupBox Header="Reception" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="0">
+            <TextBox x:Name="TextBoxReception" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" IsReadOnly="True"/>
+        </GroupBox>
+        <Button x:Name="ButtonEnvoyer" Content="Envoyer" HorizontalAlignment="Left" VerticalAlignment="Stretch" Grid.Row="1" Width="100" Click="ButtonEnvoyer_Click"/>
+        <Button x:Name="ButtonClear" Content="Clear" HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Row="1" Width="100" Click="ButtonClear_Click" />
+        <Button x:Name="ButtonTest" Content="Test" HorizontalAlignment="Center" VerticalAlignment="Stretch" Grid.Row="1" Width="100" Click="ButtonTest_Click"  />
+
+    </Grid>
+</Window>
