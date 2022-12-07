@@ -60,6 +60,12 @@ void InitIO()
     
     _TRISC7 = 0; //Moteur 2 IN2
     //********** Configuration des entrées : _TRISxx = 1 ********************************   
+    
+    
+    
+    _U1RXR = 24; 
+    _RP36R = 0b00001;
+    
 
     
 

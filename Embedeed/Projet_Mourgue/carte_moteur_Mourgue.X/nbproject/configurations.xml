@@ -13,6 +13,9 @@
       <itemPath>main.h</itemPath>
       <itemPath>ADC.h</itemPath>
       <itemPath>OS.h</itemPath>
+      <itemPath>UART.h</itemPath>
+      <itemPath>CB_TX1.h</itemPath>
+      <itemPath>CB_RX1.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -30,6 +33,9 @@
       <itemPath>Robot.c</itemPath>
       <itemPath>ADC.c</itemPath>
       <itemPath>OS.c</itemPath>
+      <itemPath>UART.c</itemPath>
+      <itemPath>CB_TX1.c</itemPath>
+      <itemPath>CB_RX1.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

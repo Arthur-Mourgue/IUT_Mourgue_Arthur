@@ -126,3 +126,22 @@ void SetFreqTimer4(float freq) {
     } else
         PR4 = (int) (FCY / freq);
 }
+
+//void __attribute__((interrupt, no_auto_psv)) _U1RXInterrupt(void) {
+//    
+//    IFS0bits.U1RXIF = 0; //Clear Rx interrupt flag
+//    
+//    //Check for receive errors
+//    if (U1STAbits.FERR == 1) {
+//        U1STAbits.FERR = 0;
+//    }
+//    //Must clear the overrun error to keep uart receiving
+//    if (U1STAbits.OERR == 1) {
+//        U1STAbits.OERR = 0;
+//    }
+//    // Get the data
+//    while (U1STAbits.URXDA == 1) {
+//        U1TXREG = U1RXREG;
+//    }
+//
+//}

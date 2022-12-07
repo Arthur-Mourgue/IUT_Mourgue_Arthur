@@ -81,7 +81,11 @@ void OperatingSystemLoop(void) {
 
         case STATE_ATTENTE_EN_COURS:
             if (timestamp > 1000)
+<<<<<<< Updated upstream
                 stateRobot = STATE_AVANCE;
+=======
+                stateRobot = STATE_ATTENTE ;
+>>>>>>> Stashed changes
             break;
 
         case STATE_AVANCE:
