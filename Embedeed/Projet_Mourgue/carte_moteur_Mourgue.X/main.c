@@ -8,11 +8,6 @@
 #include "ADC.h"
 #include "Robot.h"
 #include "OS.h"
-#include "UART.h"
-#include "CB_TX1.h"
-#include "CB_RX1.h"
-#include "libpic30.h"
-
 
 unsigned int *result;
 
@@ -20,9 +15,7 @@ int main(void) {
 
     InitOscillator();
     InitIO();
-    InitUART();
-    
-    
+
     InitTimer1();
     InitTimer23();
     InitTimer4();
@@ -38,7 +31,8 @@ int main(void) {
     //AcquireTelemetreVerite();
     //PWMSetSpeed(20,MOTEUR_DROITE);
 
-    while (1) {        
+    while (1) {
+
          if (ADCIsConversionFinished() == 1) {
             ADCClearConversionFinishedFlag();
             unsigned int *result = ADCGetResult();
@@ -69,14 +63,6 @@ int main(void) {
             } else {
                 LED_BLANCHE = 0;
             }
-            
-            int i;
-            
-            for(i=0; CB_RX1_GetDataSize(); i++){
-                unsigned char c = CB_RX1_Get();
-                SendMessage(&c,1);
-            }
-            __delay32(10000);
         }
      }
 }
