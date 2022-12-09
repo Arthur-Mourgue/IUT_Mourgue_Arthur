@@ -40,7 +40,11 @@ namespace InterfaceRobot
             timerAffichage.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timerAffichage.Tick += TimerAffichage_Tick; ;
             timerAffichage.Start();
+
+
+
         }
+        
 
         private void SerialPort1_DataReceived(object sender, DataReceivedArgs e)
         {
@@ -113,5 +117,29 @@ namespace InterfaceRobot
             serialPort1.Write(byteList,0,20);
             robot.receivedText += "\n";
         }
+
+        byte CalculateChecksum(int msgFunction, int msgPayloadLength, byte[] msgPayload)
+        {
+            byte checksum = 0;
+
+            checksum ^= 0xFE;
+            checksum ^= (byte)(msgFunction >> 8);
+            checksum ^= (byte)(msgFunction >> 0);
+            checksum ^= (byte)(msgPayloadLength >> 8);
+            checksum ^= (byte)(msgPayloadLength >> 0);
+            int i;
+            for (i = 0; i < msgPayloadLength ; i++)
+            {
+                checksum ^= msgPayload[i];
+            }
+            return checksum;
+
+        }
+
+        void UartEncodeAndSendMessage(int msgFuunction, int msgPayloadLength, byte[] msgPayload)
+        {
+
+        }
+
     }
 }
