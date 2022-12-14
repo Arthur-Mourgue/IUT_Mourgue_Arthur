@@ -21,8 +21,8 @@ int main(void) {
     InitOscillator();
     InitIO();
     InitUART();
-    
-    
+
+
     InitTimer1();
     InitTimer23();
     InitTimer4();
@@ -34,12 +34,19 @@ int main(void) {
     LED_BLANCHE = 1;
     LED_BLEUE = 1;
     LED_ORANGE = 1;
-    
+
     //AcquireTelemetreVerite();
     //PWMSetSpeed(20,MOTEUR_DROITE);
 
-    while (1) {        
-         if (ADCIsConversionFinished() == 1) {
+    while (1) {
+
+        int i;
+        for (i = 0; CB_RX1_GetDataSize(); i++) {
+            unsigned char c = CB_RX1_Get();
+            SendMessage(&c, 1);
+        }
+        
+        if (ADCIsConversionFinished() == 1) {
             ADCClearConversionFinishedFlag();
             unsigned int *result = ADCGetResult();
             float volts = ((float) result[4])*3.3 / 4096 * 3.2;
@@ -54,7 +61,7 @@ int main(void) {
             robotState.distanceTelemetreDroit2 = 34 / volts - 5;
 
 
-            if (robotState.distanceTelemetreDroit2< 30){
+            if (robotState.distanceTelemetreDroit2 < 30) {
                 LED_ORANGE = 1;
             } else {
                 LED_ORANGE = 0;
@@ -64,19 +71,13 @@ int main(void) {
             } else {
                 LED_BLEUE = 0;
             }
-            if (robotState.distanceTelemetreGauche2< 30) {
+            if (robotState.distanceTelemetreGauche2 < 30) {
                 LED_BLANCHE = 1;
             } else {
                 LED_BLANCHE = 0;
             }
-            
-            int i;
-            
-            for(i=0; CB_RX1_GetDataSize(); i++){
-                unsigned char c = CB_RX1_Get();
-                SendMessage(&c,1);
-            }
-            __delay32(10000);
+
+            //__delay32(10000);
         }
-     }
+    }
 }

@@ -60,27 +60,25 @@ namespace InterfaceRobot
             while(robot.byteListReceived.Count() > 0)
             {
                 var c = robot.byteListReceived.Dequeue();
-                receptionTextBox.Text += "0x" + c.ToString("X2") + " ";                
+                receptionTextBox.Text += "0x" + c.ToString("X2") + " ";    
+                DecodeMessage(c);            
             }
-            if (robot.receivedText != "")
-            {
-                receptionTextBox.Text += robot.receivedText;                
-                robot.receivedText = "";
-            }
+            //if (robot.receivedText != "")
+            //{
+            //    receptionTextBox.Text += robot.receivedText;                
+            //    robot.receivedText = "";
+            //}
         }
 
         int couleur = 0;
         private void buttonEnvoyer_Click(object sender, RoutedEventArgs e)
         {
-            couleur++; couleur = couleur % 5;
+            couleur++; couleur = couleur % 2;
 
             switch (couleur)
             {
-                case (0): buttonEnvoyer.Background = Brushes.RoyalBlue; break;
-                case (1): buttonEnvoyer.Background = Brushes.Purple; break;
-                case (2): buttonEnvoyer.Background = Brushes.Red; break;
-                case (3): buttonEnvoyer.Background = Brushes.Orange; break;
-                case (4): buttonEnvoyer.Background = Brushes.Beige; break;
+                case (0): buttonEnvoyer.Background = Brushes.White; break;
+                case (1): buttonEnvoyer.Background = Brushes.Beige; break;
             }
 
             SendMessage();
@@ -109,6 +107,31 @@ namespace InterfaceRobot
 
         private void test_Click(object sender, RoutedEventArgs e)
         {
+            string s = "Transmittion";
+            byte[] payload = Encoding.ASCII.GetBytes(s);
+            UartEncodeAndSendMessage((int)MessageFunctions.TextMessage, payload.Length, payload);
+
+            //s = "Reglage Led";
+            //array = Encoding.ASCII.GetBytes(s);
+            //UartEncodeAndSendMessage(0x0020, 2, array);
+
+            payload = new byte[3];
+            payload[0] = 20;
+            payload[1] = 30;
+            payload[2] = 40;
+            UartEncodeAndSendMessage((int)MessageFunctions.DistancesTelemetre, 3, payload);
+
+            payload = new byte[2];
+            payload[0] = 20;
+            payload[1] = 30;
+            UartEncodeAndSendMessage((int)MessageFunctions.LEDValues, 2, payload);
+
+            //s = "Consigne Vitesse";
+            //array = Encoding.ASCII.GetBytes(s);
+            //UartEncodeAndSendMessage(0x0020, 2, array);
+
+
+            /*
             byte[] byteList = new byte[20];
             for (int i = 0; i < 20; i++)
             {
@@ -116,6 +139,7 @@ namespace InterfaceRobot
             }
             serialPort1.Write(byteList,0,20);
             robot.receivedText += "\n";
+            */
         }
 
         byte CalculateChecksum(int msgFunction, int msgPayloadLength, byte[] msgPayload)
@@ -136,10 +160,128 @@ namespace InterfaceRobot
 
         }
 
-        void UartEncodeAndSendMessage(int msgFuunction, int msgPayloadLength, byte[] msgPayload)
-        {
+        void UartEncodeAndSendMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
+        { 
+            int pos = 0;
+            byte[] encodeMsg = new byte[msgPayloadLength + 6];
 
+            encodeMsg[pos++] += 0xFE;
+            encodeMsg[pos++] += (byte)(msgFunction >> 8);
+            encodeMsg[pos++] += (byte)(msgFunction >> 0);
+            encodeMsg[pos++] += (byte)(msgPayloadLength >> 8);
+            encodeMsg[pos++] += (byte)(msgPayloadLength >> 0);
+            for (int i = 0 ; i < msgPayloadLength; i++)
+            {
+                encodeMsg[pos++] ^= msgPayload[i];
+            }
+
+            encodeMsg[pos++] += (byte)(CalculateChecksum(msgFunction, msgPayloadLength, msgPayload));
+
+            serialPort1.Write(encodeMsg, 0, pos);
         }
 
+        public enum StateReception
+        {
+            Waiting,
+            FunctionMSB,
+            FunctionLSB,
+            PayloadLengthMSB,
+            PayloadLengthLSB,
+            Payload,
+            CheckSum
+        }
+        StateReception rcvState = StateReception.Waiting;
+        int msgDecodedFunction = 0;
+        int msgDecodedPayloadLength = 0;
+        byte[] msgDecodedPayload;
+        int msgDecodedPayloadIndex = 0;
+        byte calculatedChecksum = 0;
+
+        private void DecodeMessage(byte c)
+        {
+            switch (rcvState)
+            {
+                case StateReception.Waiting:
+                    if (c == 0xFE)
+                        rcvState = StateReception.FunctionMSB;
+                    break;
+                case StateReception.FunctionMSB:
+                    msgDecodedFunction = c << 8;
+                    rcvState = StateReception.FunctionLSB;
+                    break;
+                case StateReception.FunctionLSB:
+                    msgDecodedFunction += c << 0;
+                    rcvState = StateReception.PayloadLengthMSB;
+                    break;
+                case StateReception.PayloadLengthMSB:
+                    msgDecodedPayloadLength = c << 8;
+                    rcvState = StateReception.PayloadLengthLSB;
+                    break;
+                case StateReception.PayloadLengthLSB:
+                    msgDecodedPayloadLength += c << 0;
+                    if (msgDecodedPayloadLength == 0)
+                        rcvState = StateReception.CheckSum;
+                    else if (msgDecodedPayloadLength >= 1024)
+                        rcvState = StateReception.Waiting;
+                    else
+                    {
+                        msgDecodedPayload = new byte[msgDecodedPayloadLength];
+                        msgDecodedPayloadIndex = 0;
+                        rcvState = StateReception.Payload;
+                    }
+                    break;
+                case StateReception.Payload:
+                    msgDecodedPayload[msgDecodedPayloadIndex] = c;
+                    msgDecodedPayloadIndex++;
+                    if (msgDecodedPayloadIndex >= msgDecodedPayloadLength)
+                    {
+                        rcvState = StateReception.CheckSum;
+                    }
+                    break;
+                case StateReception.CheckSum:
+                    calculatedChecksum = CalculateChecksum(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
+                    if (calculatedChecksum == c)
+                    {
+                        //Success, on a un message valide
+                        receptionTextBox.Text += " OK \n";
+                        ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
+                    }
+                    else
+                    {
+                        receptionTextBox.Text += " Pas OK \n";
+                    }
+                    rcvState = StateReception.Waiting;
+                    break;
+                default:
+                    rcvState = StateReception.Waiting;
+                    break;
+            }
+        }
+
+        void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
+        {
+            switch((MessageFunctions)msgFunction)
+            {
+                case MessageFunctions.TextMessage:
+                    receptionTextBox.Text += Encoding.ASCII.GetString(msgPayload);
+                    break;
+                case MessageFunctions.DistancesTelemetre:
+                    receptionTextBox.Text = " Distance telemetre  \n";
+                    break;
+                case MessageFunctions.LEDValues:
+                    receptionTextBox.Text = " LED  \n";
+                    Led_1.IsChecked = true;
+                    break;
+            }
+        }
+
+    }
+
+    public enum MessageFunctions
+    {
+        TextMessage = 0x0080,
+        LEDValues = 0x0020,
+        DistancesTelemetre = 0x0030,
+        MotorSpeed = 0x0040,
     }
 }
