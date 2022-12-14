@@ -107,24 +107,25 @@ namespace InterfaceRobot
 
         private void test_Click(object sender, RoutedEventArgs e)
         {
-            string s = "Transmittion";
+            //string s = "Transmittion";
+            //byte[] payload = Encoding.ASCII.GetBytes(s);
+            //UartEncodeAndSendMessage((int)MessageFunctions.TextMessage, payload.Length, payload);
+
+            string s = "1:1";
             byte[] payload = Encoding.ASCII.GetBytes(s);
-            UartEncodeAndSendMessage((int)MessageFunctions.TextMessage, payload.Length, payload);
-
-            //s = "Reglage Led";
-            //array = Encoding.ASCII.GetBytes(s);
-            //UartEncodeAndSendMessage(0x0020, 2, array);
-
-            payload = new byte[3];
-            payload[0] = 20;
-            payload[1] = 30;
-            payload[2] = 40;
-            UartEncodeAndSendMessage((int)MessageFunctions.DistancesTelemetre, 3, payload);
-
-            payload = new byte[2];
-            payload[0] = 20;
-            payload[1] = 30;
             UartEncodeAndSendMessage((int)MessageFunctions.LEDValues, 2, payload);
+
+
+            //payload = new byte[3];
+            //payload[0] = 20;
+            //payload[1] = 30;
+            //payload[2] = 40;
+            //UartEncodeAndSendMessage((int)MessageFunctions.DistancesTelemetre, 3, payload);
+
+            //payload = new byte[2];
+            //payload[0] = 20;
+            //payload[1] = 30;
+            //UartEncodeAndSendMessage((int)MessageFunctions.LEDValues, 2, payload);
 
             //s = "Consigne Vitesse";
             //array = Encoding.ASCII.GetBytes(s);
@@ -258,6 +259,7 @@ namespace InterfaceRobot
             }
         }
 
+        int[] stateLed;
         void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
             switch((MessageFunctions)msgFunction)
@@ -267,6 +269,7 @@ namespace InterfaceRobot
                     break;
                 case MessageFunctions.DistancesTelemetre:
                     receptionTextBox.Text = " Distance telemetre  \n";
+                    stateLed[msgPayload[0] - 1] = (int)msgPayload[1]; 
                     break;
                 case MessageFunctions.LEDValues:
                     receptionTextBox.Text = " LED  \n";
