@@ -31,7 +31,7 @@ namespace InterfaceRobot
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM3", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM10", 115200, Parity.None, 8, StopBits.One);
             serialPort1.Open();
 
             serialPort1.DataReceived += SerialPort1_DataReceived;
@@ -40,9 +40,6 @@ namespace InterfaceRobot
             timerAffichage.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timerAffichage.Tick += TimerAffichage_Tick; ;
             timerAffichage.Start();
-
-
-
         }
         
 
@@ -60,7 +57,7 @@ namespace InterfaceRobot
             while(robot.byteListReceived.Count() > 0)
             {
                 var c = robot.byteListReceived.Dequeue();
-                receptionTextBox.Text += "0x" + c.ToString("X2") + " ";    
+                //receptionTextBox.Text += "0x" + c.ToString("X2") + " ";    
                 DecodeMessage(c);            
             }
             //if (robot.receivedText != "")
@@ -105,31 +102,27 @@ namespace InterfaceRobot
             receptionTextBox.Text = "";
         }
 
-        private void test_Click(object sender, RoutedEventArgs e)
+        private void buttonTest_Click(object sender, RoutedEventArgs e)
         {
-            //string s = "Transmittion";
-            //byte[] payload = Encoding.ASCII.GetBytes(s);
-            //UartEncodeAndSendMessage((int)MessageFunctions.TextMessage, payload.Length, payload);
-
-            string s = "1:1";
+            string s = "Transmission";
             byte[] payload = Encoding.ASCII.GetBytes(s);
-            UartEncodeAndSendMessage((int)MessageFunctions.LEDValues, 2, payload);
+            UartEncodeAndSendMessage((int)MessageFunctions.TextMessage, payload.Length, payload);
+
+            payload = new byte[] { 0, 0, 0 };
+            UartEncodeAndSendMessage((int)MessageFunctions.LEDValues, 3, payload);
 
 
-            //payload = new byte[3];
-            //payload[0] = 20;
-            //payload[1] = 30;
-            //payload[2] = 40;
-            //UartEncodeAndSendMessage((int)MessageFunctions.DistancesTelemetre, 3, payload);
+            payload = new byte[3];
+            payload[0] = 20;
+            payload[1] = 30;
+            payload[2] = 40;
+            UartEncodeAndSendMessage((int)MessageFunctions.DistancesTelemetre, 3, payload);
 
-            //payload = new byte[2];
-            //payload[0] = 20;
-            //payload[1] = 30;
-            //UartEncodeAndSendMessage((int)MessageFunctions.LEDValues, 2, payload);
+            payload = new byte[2];
+            payload[0] = 100;
+            payload[1] = 90;
+            UartEncodeAndSendMessage((int)MessageFunctions.MotorSpeed, 2, payload);
 
-            //s = "Consigne Vitesse";
-            //array = Encoding.ASCII.GetBytes(s);
-            //UartEncodeAndSendMessage(0x0020, 2, array);
 
 
             /*
@@ -146,6 +139,7 @@ namespace InterfaceRobot
         byte CalculateChecksum(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
             byte checksum = 0;
+
 
             checksum ^= 0xFE;
             checksum ^= (byte)(msgFunction >> 8);
@@ -267,17 +261,33 @@ namespace InterfaceRobot
                 case MessageFunctions.TextMessage:
                     receptionTextBox.Text += Encoding.ASCII.GetString(msgPayload);
                     break;
+
                 case MessageFunctions.DistancesTelemetre:
                     receptionTextBox.Text = " Distance telemetre  \n";
-                    stateLed[msgPayload[0] - 1] = (int)msgPayload[1]; 
+                    IR_gauche.Content = msgPayload[0];
+                    IR_centre.Content = msgPayload[1];
+                    IR_droit.Content = msgPayload[2];
                     break;
+
+                case MessageFunctions.MotorSpeed:
+                    receptionTextBox.Text = " Vitesse Moteur  \n";
+                    Vitesse_gauche.Content = msgPayload[0];
+                    Vitesse_droit.Content = msgPayload[1];
+                    break;
+
                 case MessageFunctions.LEDValues:
-                    receptionTextBox.Text = " LED  \n";
-                    Led_1.IsChecked = true;
+                    if(msgPayload[0] == 1) Led_1.IsChecked = true;
+                    else Led_1.IsChecked = false;
+
+                    if (msgPayload[1] == 1) Led_2.IsChecked = true;
+                    else Led_2.IsChecked = false;
+
+                    if (msgPayload[2] == 1) Led_3.IsChecked = true;
+                    else Led_3.IsChecked = false;
+
                     break;
             }
         }
-
     }
 
     public enum MessageFunctions

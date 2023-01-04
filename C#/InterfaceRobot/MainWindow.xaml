@@ -9,44 +9,70 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="18*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="2.5*"/>
-            <RowDefinition Height="2.5*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="120"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="150*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <GroupBox x:Name="Emission" Header="Emission" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" Margin="10,0,10,5">
+        <GroupBox x:Name="Emission" Header="Emission" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Margin="10">
             <TextBox x:Name="emissionTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" KeyUp="emissionTextBox_KeyUp"/>
         </GroupBox>
-
-        <GroupBox x:Name="Reception" Header="Reception" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Column="5" Grid.Row="1" Margin="10,0" Grid.ColumnSpan="3" Height="170">
+        <GroupBox x:Name="Reception" Header="Reception" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Margin="10">
             <TextBox x:Name="receptionTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True" TextWrapping="Wrap"/>
         </GroupBox>
-        <Button x:Name="buttonEnvoyer" Content="Envoi" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Click="buttonEnvoyer_Click" Margin="10,170,0,0" Grid.RowSpan="2" Grid.Column="1"/>
-        <Button x:Name="buttonClear" Content="Clear" Grid.Column="3" HorizontalAlignment="Stretch" Grid.Row="1"  VerticalAlignment="Stretch" Click="buttonClear_Click" Margin="10,170,0,0" Grid.RowSpan="2"/>
-        <Button x:Name="test" Content="Test" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="test_Click" Margin="10,170,0,0" Grid.Row="1" Height="25" Grid.Column="2" Grid.RowSpan="2"/>
-        <GroupBox Grid.Column="1" Header="Leds" HorizontalAlignment="Left" Height="160" Margin="10,0,0,0" Grid.Row="5" VerticalAlignment="Top" Width="78" Grid.RowSpan="4"/>
-        <CheckBox x:Name="Led_1" Grid.ColumnSpan="2" Content="Led 1 " HorizontalAlignment="Left" Margin="19,0,0,0" Grid.Row="6" VerticalAlignment="Top" Width="69" Height="49" IsEnabled="False"/>
-        <CheckBox x:Name="Led_2" Grid.ColumnSpan="2" Content="Led 2 " HorizontalAlignment="Left" Margin="19,0,0,0" Grid.Row="7" VerticalAlignment="Top" Width="69" Height="49"/>
-        <CheckBox x:Name="Led_3" Grid.ColumnSpan="2" Content="Led 3 " HorizontalAlignment="Left" Margin="19,0,0,0" Grid.Row="8" VerticalAlignment="Top" Width="69" Height="38"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+            <Button x:Name="buttonEnvoyer" Content="Envoi" Click="buttonEnvoyer_Click" Margin="10" Width="100"/>
+            <Button x:Name="buttonClear" Content="Clear" Click="buttonClear_Click" Margin="10" Width="100"/>
+            <Button x:Name="buttonTest" Content="Test" Click="buttonTest_Click"  Margin="10" Width="100"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <GroupBox Header="Leds">
+                <StackPanel>
+                    <CheckBox x:Name="Led_1" Content="Led 1 " Height="30" VerticalContentAlignment="Center"/>
+                    <CheckBox x:Name="Led_2" Content="Led 2 " Height="30" VerticalContentAlignment="Center" />
+                    <CheckBox x:Name="Led_3" Content="Led 3 " Height="30" VerticalContentAlignment="Center" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Telemètres IR" >
+                <StackPanel Orientation="Horizontal" Width="120">
+                <StackPanel>
+                    <Label Content="IR Gauche : " Height="30" VerticalContentAlignment="Center" />
+                    <Label Content="IR Centre : " Height="30" VerticalContentAlignment="Center" />
+                    <Label Content="IR Droit  : " Height="30" VerticalContentAlignment="Center" />
+                </StackPanel>
+                <StackPanel >
+                    <Label x:Name="IR_gauche" Content="0" Height="30" VerticalContentAlignment="Center" />
+                    <Label x:Name="IR_centre" Content="0" Height="30" VerticalContentAlignment="Center" />
+                    <Label x:Name="IR_droit" Content="0" Height="30" VerticalContentAlignment="Center" />
+                </StackPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Moteurs" >
+                <StackPanel Orientation="Horizontal" Width="180" >
+                <StackPanel >
+                    <Label  Content="Vitesse Gauche : " Height="45" VerticalContentAlignment="Center" />
+                    <Label  Content="Vitesse Droit : " Height="45" VerticalContentAlignment="Center" />
+                </StackPanel>
+                    <StackPanel Width="40">
+                        <Label x:Name="Vitesse_gauche" Content="0 " Height="45" VerticalContentAlignment="Center"/>
+                        <Label x:Name="Vitesse_droit"  Content="0" Height="45" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel >
+                        <Label Content="%" Height="45" VerticalContentAlignment="Center"/>
+                        <Label Content="%" Height="45" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+        </StackPanel>
+        
 
 
-        <GroupBox Grid.ColumnSpan="3" Grid.Column="3" Header="Telemtres IR" HorizontalAlignment="Left" Height="160" Grid.Row="5" Grid.RowSpan="4" VerticalAlignment="Top" Width="264">
-            <TextBox HorizontalAlignment="Left" Height="117" Margin="0,10,-2,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="254"/>
-        </GroupBox>
+        
 
     </Grid>
 </Window>
