@@ -8,16 +8,19 @@
 #ifndef UART_PROTOCOL_H
 #define	UART_PROTOCOL_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
 
+#define Waiting
+#define FunctionMSB
+#define FunctionLSB
+#define PayloadLengthMSB
+#define PayloadLengthLSB
+#define Payload
+#define CheckSum
 
-
-
-#ifdef	__cplusplus
-}
-#endif
+unsigned char UartCalculateChecksum(int msgFunction,int msgPayloadLength, unsigned char* msgPayload);
+void UartEncodeAndSendMessage(int msgFunction,int msgPayloadLength, unsigned char* msgPayload);
+void UartDecodeMessage(unsigned char c);
+void UartProcessDecodedMessage(int function,int payloadLength, unsigned char* payload);
 
 #endif	/* UART_PROTOCOL_H */
 

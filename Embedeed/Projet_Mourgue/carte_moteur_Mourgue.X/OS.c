@@ -8,6 +8,7 @@
 #include "ADC.h"
 #include "Robot.h"
 #include "OS.h"
+#include "UART_Protocol.h"
 
 #define STATE_ATTENTE 0
 #define STATE_ATTENTE_EN_COURS 1
@@ -82,7 +83,6 @@ void OperatingSystemLoop(void) {
         case STATE_ATTENTE_EN_COURS:
             if (timestamp > 1000)
                 stateRobot = STATE_AVANCE;
-                stateRobot = STATE_ATTENTE ;
             break;
 
         case STATE_AVANCE:
@@ -460,10 +460,16 @@ void SetNextRobotStateInAutomaticMode() {
     //Si l?on n?est pas dans la transition de l?étape en cours
     if (nextStateRobot != stateRobot - 1) {
         stateRobot = nextStateRobot;
+        unsigned long time = timestamp;
+        unsigned char payload[5];
+        payload[0] = stateRobot;
+        payload[1] = time >> 24;
+        payload[2] = time >> 16;
+        payload[3] = time >> 8;
+        payload[4] = time >> 0;
+        UartEncodeAndSendMessage(0x0050, 5, payload);
     }
 }
-//HDIUZHZDU
-//HUZUIHDIH
 
 unsigned char AcquireTelemetreVerite(void) {
     state = 0b00000;

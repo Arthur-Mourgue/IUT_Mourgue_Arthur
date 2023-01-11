@@ -12,6 +12,7 @@
 #include "CB_TX1.h"
 #include "CB_RX1.h"
 #include "libpic30.h"
+#include "UART_Protocol.h"
 
 
 unsigned int *result;
@@ -45,7 +46,7 @@ int main(void) {
             unsigned char c = CB_RX1_Get();
             SendMessage(&c, 1);
         }
-        
+
         if (ADCIsConversionFinished() == 1) {
             ADCClearConversionFinishedFlag();
             unsigned int *result = ADCGetResult();
@@ -59,25 +60,28 @@ int main(void) {
             robotState.distanceTelemetreDroit = 34 / volts - 5;
             volts = ((float) result[0])*3.3 / 4096 * 3.2;
             robotState.distanceTelemetreDroit2 = 34 / volts - 5;
+            unsigned char payload[3] = {robotState.distanceTelemetreGauche,robotState.distanceTelemetreCentre,robotState.distanceTelemetreDroit};
+            UartEncodeAndSendMessage(0x0030, 3, payload);
 
-
-            if (robotState.distanceTelemetreDroit2 < 30) {
-                LED_ORANGE = 1;
-            } else {
-                LED_ORANGE = 0;
-            }
-            if (robotState.distanceTelemetreCentre < 30) {
-                LED_BLEUE = 1;
-            } else {
-                LED_BLEUE = 0;
-            }
-            if (robotState.distanceTelemetreGauche2 < 30) {
-                LED_BLANCHE = 1;
-            } else {
-                LED_BLANCHE = 0;
-            }
-
-            //__delay32(10000);
+//            if (robotState.distanceTelemetreDroit2 < 30) {
+//                LED_ORANGE = 1;
+//            } else {
+//                LED_ORANGE = 0;
+//            }
+//            if (robotState.distanceTelemetreCentre < 30) {
+//                LED_BLEUE = 1;
+//            } else {
+//                LED_BLEUE = 0;
+//            }
+//            if (robotState.distanceTelemetreGauche2 < 30) {
+//                LED_BLANCHE = 1;
+//            } else {
+//                LED_BLANCHE = 0;
+//            }
+            
+            OperatingSystemLoop();
+            
+            //SendMessage(payload, 7);
         }
     }
 }

@@ -111,7 +111,6 @@ namespace InterfaceRobot
             payload = new byte[] { 0, 0, 0 };
             UartEncodeAndSendMessage((int)MessageFunctions.LEDValues, 3, payload);
 
-
             payload = new byte[3];
             payload[0] = 20;
             payload[1] = 30;
@@ -160,11 +159,11 @@ namespace InterfaceRobot
             int pos = 0;
             byte[] encodeMsg = new byte[msgPayloadLength + 6];
 
-            encodeMsg[pos++] += 0xFE;
-            encodeMsg[pos++] += (byte)(msgFunction >> 8);
-            encodeMsg[pos++] += (byte)(msgFunction >> 0);
-            encodeMsg[pos++] += (byte)(msgPayloadLength >> 8);
-            encodeMsg[pos++] += (byte)(msgPayloadLength >> 0);
+            encodeMsg[pos++] = 0xFE;
+            encodeMsg[pos++] = (byte)(msgFunction >> 8);
+            encodeMsg[pos++] = (byte)(msgFunction >> 0);
+            encodeMsg[pos++] = (byte)(msgPayloadLength >> 8);
+            encodeMsg[pos++] = (byte)(msgPayloadLength >> 0);
             for (int i = 0 ; i < msgPayloadLength; i++)
             {
                 encodeMsg[pos++] ^= msgPayload[i];
@@ -238,12 +237,11 @@ namespace InterfaceRobot
                     if (calculatedChecksum == c)
                     {
                         //Success, on a un message valide
-                        receptionTextBox.Text += " OK \n";
                         ProcessDecodedMessage(msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
                     }
                     else
                     {
-                        receptionTextBox.Text += " Pas OK \n";
+                        receptionTextBox.Text += "/nERREUR/n";
                     }
                     rcvState = StateReception.Waiting;
                     break;
@@ -253,7 +251,6 @@ namespace InterfaceRobot
             }
         }
 
-        int[] stateLed;
         void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
             switch((MessageFunctions)msgFunction)
@@ -263,14 +260,12 @@ namespace InterfaceRobot
                     break;
 
                 case MessageFunctions.DistancesTelemetre:
-                    receptionTextBox.Text = " Distance telemetre  \n";
                     IR_gauche.Content = msgPayload[0];
                     IR_centre.Content = msgPayload[1];
                     IR_droit.Content = msgPayload[2];
                     break;
 
                 case MessageFunctions.MotorSpeed:
-                    receptionTextBox.Text = " Vitesse Moteur  \n";
                     Vitesse_gauche.Content = msgPayload[0];
                     Vitesse_droit.Content = msgPayload[1];
                     break;
@@ -284,17 +279,49 @@ namespace InterfaceRobot
 
                     if (msgPayload[2] == 1) Led_3.IsChecked = true;
                     else Led_3.IsChecked = false;
-
                     break;
+
+                case MessageFunctions.RobotState:
+                    int instant = (((int)msgPayload[1]) << 24) + (((int)msgPayload[2]) << 16)
+                    + (((int)msgPayload[3]) << 8) + ((int)msgPayload[4]);
+                    receptionTextBox.Text += "\nRobot␣State␣:␣" +
+                    ((StateRobot)(msgPayload[0])).ToString() +
+                    "␣-␣" + instant.ToString() + "␣ms";
+                    break;
+
             }
+        }
+
+
+        public enum MessageFunctions
+        {
+            TextMessage = 0x0080,
+            LEDValues = 0x0020,
+            DistancesTelemetre = 0x0030,
+            MotorSpeed = 0x0040,
+            RobotState = 0x0050,
+        }
+
+        public enum StateRobot
+        {
+            STATE_ATTENTE = 0,
+            STATE_ATTENTE_EN_COURS = 1,
+            STATE_AVANCE = 2,
+            STATE_AVANCE_EN_COURS = 3,
+            STATE_TOURNE_GAUCHE = 4,
+            STATE_TOURNE_GAUCHE_EN_COURS = 5,
+            STATE_TOURNE_DROITE = 6,
+            STATE_TOURNE_DROITE_EN_COURS = 7,
+            STATE_TOURNE_SUR_PLACE_GAUCHE = 8,
+            STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS = 9,
+            STATE_TOURNE_SUR_PLACE_DROITE = 10,
+            STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS = 11,
+            STATE_ARRET = 12,
+            STATE_ARRET_EN_COURS = 13,
+            STATE_RECULE = 14,
+            STATE_RECULE_EN_COURS = 15
         }
     }
 
-    public enum MessageFunctions
-    {
-        TextMessage = 0x0080,
-        LEDValues = 0x0020,
-        DistancesTelemetre = 0x0030,
-        MotorSpeed = 0x0040,
-    }
+
 }

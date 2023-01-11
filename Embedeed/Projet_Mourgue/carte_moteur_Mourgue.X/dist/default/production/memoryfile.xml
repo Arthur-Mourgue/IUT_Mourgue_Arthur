@@ -5,19 +5,14 @@
     <memory name="data">
       <units>bytes</units>
       <length>49152</length>
-      <used>336</used>
-      <free>48816</free>
+      <used>474</used>
+      <free>48678</free>
     </memory>
     <memory name="program">
       <units>bytes</units>
       <length>524514</length>
-<<<<<<< Updated upstream
-      <used>7167</used>
-      <free>517347</free>
-=======
-      <used>8010</used>
-      <free>516504</free>
->>>>>>> Stashed changes
+      <used>9036</used>
+      <free>515478</free>
     </memory>
   </executable>
 </project>
