@@ -42,9 +42,11 @@ int main(void) {
     while (1) {
 
         int i;
-        for (i = 0; CB_RX1_GetDataSize(); i++) {
+        for (i = 0; i<CB_RX1_GetDataSize(); i++) {
             unsigned char c = CB_RX1_Get();
-            SendMessage(&c, 1);
+            //SendMessage(&c, 1);
+            UartDecodeMessage(c);
+
         }
 
         if (ADCIsConversionFinished() == 1) {
@@ -60,28 +62,29 @@ int main(void) {
             robotState.distanceTelemetreDroit = 34 / volts - 5;
             volts = ((float) result[0])*3.3 / 4096 * 3.2;
             robotState.distanceTelemetreDroit2 = 34 / volts - 5;
-            unsigned char payload[3] = {robotState.distanceTelemetreGauche,robotState.distanceTelemetreCentre,robotState.distanceTelemetreDroit};
+            unsigned char payload[3] = {robotState.distanceTelemetreGauche, robotState.distanceTelemetreCentre, robotState.distanceTelemetreDroit};
             UartEncodeAndSendMessage(0x0030, 3, payload);
 
-//            if (robotState.distanceTelemetreDroit2 < 30) {
-//                LED_ORANGE = 1;
-//            } else {
-//                LED_ORANGE = 0;
-//            }
-//            if (robotState.distanceTelemetreCentre < 30) {
-//                LED_BLEUE = 1;
-//            } else {
-//                LED_BLEUE = 0;
-//            }
-//            if (robotState.distanceTelemetreGauche2 < 30) {
-//                LED_BLANCHE = 1;
-//            } else {
-//                LED_BLANCHE = 0;
-//            }
-            
+            //            if (robotState.distanceTelemetreDroit2 < 30) {
+            //                LED_ORANGE = 1;
+            //            } else {
+            //                LED_ORANGE = 0;
+            //            }
+            //            if (robotState.distanceTelemetreCentre < 30) {
+            //                LED_BLEUE = 1;
+            //            } else {
+            //                LED_BLEUE = 0;
+            //            }
+            //            if (robotState.distanceTelemetreGauche2 < 30) {
+            //                LED_BLANCHE = 1;
+            //            } else {
+            //                LED_BLANCHE = 0;
+            //            }
+
             OperatingSystemLoop();
-            
             //SendMessage(payload, 7);
+
+
         }
     }
 }

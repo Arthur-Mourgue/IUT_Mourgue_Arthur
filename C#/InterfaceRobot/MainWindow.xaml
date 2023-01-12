@@ -38,13 +38,13 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Telemètres IR" >
-                <StackPanel Orientation="Horizontal" Width="120">
+                <StackPanel Orientation="Horizontal" Width="105">
                 <StackPanel>
                     <Label Content="IR Gauche : " Height="30" VerticalContentAlignment="Center" />
                     <Label Content="IR Centre : " Height="30" VerticalContentAlignment="Center" />
                     <Label Content="IR Droit  : " Height="30" VerticalContentAlignment="Center" />
                 </StackPanel>
-                <StackPanel >
+                    <StackPanel  Width="35">
                     <Label x:Name="IR_gauche" Content="0" Height="30" VerticalContentAlignment="Center" />
                     <Label x:Name="IR_centre" Content="0" Height="30" VerticalContentAlignment="Center" />
                     <Label x:Name="IR_droit" Content="0" Height="30" VerticalContentAlignment="Center" />
@@ -52,12 +52,12 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Moteurs" >
-                <StackPanel Orientation="Horizontal" Width="180" >
-                <StackPanel >
-                    <Label  Content="Vitesse Gauche : " Height="45" VerticalContentAlignment="Center" />
-                    <Label  Content="Vitesse Droit : " Height="45" VerticalContentAlignment="Center" />
-                </StackPanel>
-                    <StackPanel Width="40">
+                <StackPanel Orientation="Horizontal" Width="150" >
+                    <StackPanel >
+                        <Label  Content="Vitesse Gauche : " Height="45" VerticalContentAlignment="Center" />
+                        <Label  Content="Vitesse Droit : " Height="45" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Width="35">
                         <Label x:Name="Vitesse_gauche" Content="0 " Height="45" VerticalContentAlignment="Center"/>
                         <Label x:Name="Vitesse_droit"  Content="0" Height="45" VerticalContentAlignment="Center" />
                     </StackPanel>
@@ -67,6 +67,13 @@
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
+            <GroupBox Header="Mode" Width="50">
+                <StackPanel>
+                    <CheckBox x:Name="Automatique" Content=" A" Height="45" VerticalContentAlignment="Center"/>
+                    <CheckBox x:Name="Manuel" Content=" M" Height="45" VerticalContentAlignment="Center" />
+                </StackPanel>
+            </GroupBox>
+            
 
         </StackPanel>
         

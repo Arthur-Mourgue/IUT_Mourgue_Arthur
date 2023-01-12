@@ -10,63 +10,6 @@
 #include "OS.h"
 #include "UART_Protocol.h"
 
-#define STATE_ATTENTE 0
-#define STATE_ATTENTE_EN_COURS 1
-#define STATE_AVANCE 2
-#define STATE_AVANCE_EN_COURS 3
-#define STATE_TOURNE_GAUCHE 4
-#define STATE_TOURNE_GAUCHE_EN_COURS 5
-#define STATE_TOURNE_DROITE 6
-#define STATE_TOURNE_DROITE_EN_COURS 7
-#define STATE_TOURNE_SUR_PLACE_GAUCHE 8
-#define STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS 9
-#define STATE_TOURNE_SUR_PLACE_DROITE 10
-#define STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS 11
-#define STATE_RECULE_PAR_GAUCHE 16
-#define STATE_RECULE_PAR_GAUCHE_EN_COURS 17
-#define STATE_RECULE_PAR_DROITE 18
-#define STATE_RECULE_PAR_DROITE_EN_COURS 19
-#define STATE_ARRET 12
-#define STATE_ARRET_EN_COURS 13
-#define STATE_RECULE 14
-#define STATE_RECULE_EN_COURS 15
-
-#define STATE_RECULE_UN_PEU_GAUCHE 20
-#define STATE_RECULE_UN_PEU_GAUCHE_EN_COURS 21
-#define STATE_RECULE_UN_PEU_DROITE 22
-#define STATE_RECULE_UN_PEU_DROITE_EN_COURS 23
-#define STATE_TOURNE_UN_PEU_GAUCHE 24
-#define STATE_TOURNE_UN_PEU_GAUCHE_EN_COURS 25
-#define STATE_TOURNE_UN_PEU_DROITE 26
-#define STATE_TOURNE_UN_PEU_DROITE_EN_COURS 27
-
-#define STATE_TOURNE_BCP_GAUCHE 28
-#define STATE_TOURNE_BCP_GAUCHE_EN_COURS 29
-#define STATE_TOURNE_BCP_DROITE 30
-#define STATE_TOURNE_BCP_DROITE_EN_COURS 31 
-#define STATE_180_DROITE 32
-#define STATE_180_DROITE_EN_COURS 33
-#define STATE_180_GAUCHE 40
-#define STATE_180_GAUCHE_EN_COURS 41
-#define STATE_180 42
-#define STATE_180_EN_COURS 43
-#define STATE_90_DROITE 44
-#define STATE_90_DROITE_EN_COURS 45
-#define STATE_90_GAUCHE 46
-#define STATE_90_GAUCHE_EN_COURS 47 
-#define STATE_TOURNE_MINI_GAUCHE 38
-#define STATE_TOURNE_MINI_GAUCHE_EN_COURS 39
-#define STATE_TOURNE_MINI_DROITE 36
-#define STATE_TOURNE_MINI_DROITE_EN_COURS 37
-
-#define STATE_CELEBRATION 34
-#define STATE_CELEBRATION_EN_COURS 35
-
-#define PAS_D_OBSTACLE 0
-#define OBSTACLE_A_GAUCHE 1
-#define OBSTACLE_A_DROITE 2
-#define OBSTACLE_EN_FACE 3
-
 unsigned long timestamp;
 unsigned long startingActionTimestamp;
 unsigned char stateRobot;
@@ -91,7 +34,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_AVANCE_EN_COURS;
             break;
         case STATE_AVANCE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
 
         case STATE_TOURNE_GAUCHE:
@@ -100,7 +43,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_GAUCHE_EN_COURS;
             break;
         case STATE_TOURNE_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
 
         case STATE_TOURNE_DROITE:
@@ -109,7 +52,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_DROITE_EN_COURS;
             break;
         case STATE_TOURNE_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
 
         case STATE_TOURNE_SUR_PLACE_GAUCHE:
@@ -118,7 +61,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS;
             break;
         case STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
 
         case STATE_TOURNE_SUR_PLACE_DROITE:
@@ -127,7 +70,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS;
             break;
         case STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_RECULE_PAR_GAUCHE:
             PWMSetSpeedConsigne(0, MOTEUR_DROIT);
@@ -135,7 +78,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_RECULE_PAR_GAUCHE_EN_COURS;
             break;
         case STATE_RECULE_PAR_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_RECULE_PAR_DROITE:
             PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
@@ -143,7 +86,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_RECULE_PAR_DROITE_EN_COURS;
             break;
         case STATE_RECULE_PAR_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_RECULE_UN_PEU_DROITE:
             PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
@@ -151,7 +94,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_RECULE_PAR_DROITE_EN_COURS;
             break;
         case STATE_RECULE_UN_PEU_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_RECULE_UN_PEU_GAUCHE:
             PWMSetSpeedConsigne(0, MOTEUR_DROIT);
@@ -159,7 +102,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_RECULE_UN_PEU_GAUCHE_EN_COURS;
             break;
         case STATE_RECULE_UN_PEU_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_TOURNE_UN_PEU_GAUCHE:
             PWMSetSpeedConsigne(25, MOTEUR_DROIT);
@@ -167,7 +110,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_UN_PEU_GAUCHE_EN_COURS;
             break;
         case STATE_TOURNE_UN_PEU_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_TOURNE_UN_PEU_DROITE:
             PWMSetSpeedConsigne(15, MOTEUR_DROIT);
@@ -175,7 +118,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_UN_PEU_DROITE_EN_COURS;
             break;
         case STATE_TOURNE_UN_PEU_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_TOURNE_BCP_DROITE:
             PWMSetSpeedConsigne(5, MOTEUR_DROIT);
@@ -183,7 +126,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_BCP_DROITE_EN_COURS;
             break;
         case STATE_TOURNE_BCP_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_TOURNE_BCP_GAUCHE:
             PWMSetSpeedConsigne(25, MOTEUR_DROIT);
@@ -191,7 +134,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_BCP_GAUCHE_EN_COURS;
             break;
         case STATE_TOURNE_BCP_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_TOURNE_MINI_GAUCHE:
             PWMSetSpeedConsigne(25, MOTEUR_DROIT);
@@ -199,7 +142,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_MINI_GAUCHE_EN_COURS;
             break;
         case STATE_TOURNE_MINI_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_TOURNE_MINI_DROITE:
             PWMSetSpeedConsigne(20, MOTEUR_DROIT);
@@ -207,7 +150,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_TOURNE_MINI_DROITE_EN_COURS;
             break;
         case STATE_TOURNE_MINI_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_180:
             PWMSetSpeedConsigne(15, MOTEUR_DROIT);
@@ -226,7 +169,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_180_GAUCHE_EN_COURS;
             break;
         case STATE_180_GAUCHE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_180_DROITE:
             PWMSetSpeedConsigne(-15, MOTEUR_DROIT);
@@ -234,7 +177,7 @@ void OperatingSystemLoop(void) {
             stateRobot = STATE_180_DROITE_EN_COURS;
             break;
         case STATE_180_DROITE_EN_COURS:
-            SetNextRobotStateInAutomaticMode();
+            if (autoControlActivated == 1)SetNextRobotStateInAutomaticMode();
             break;
         case STATE_CELEBRATION:
             PWMSetSpeedConsigne(10, MOTEUR_DROIT);

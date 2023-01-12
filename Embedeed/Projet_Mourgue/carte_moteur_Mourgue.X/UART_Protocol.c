@@ -3,16 +3,7 @@
 #include "UART_Protocol.h"
 #include "UART.h"
 #include "CB_TX1.h"
-
-enum StateReception {
-    Waiting,
-    FunctionMSB,
-    FunctionLSB,
-    PayloadLengthMSB,
-    PayloadLengthLSB,
-    Payload,
-    CheckSum
-};
+#include "OS.h"
 
 enum MessageFunctions {
     TextMessage = 0x0080,
@@ -21,6 +12,7 @@ enum MessageFunctions {
     MotorSpeed = 0x0040,
 };
 
+unsigned char autoControlActivated = 1;
 int rcvState = Waiting;
 int msgDecodedFunction = 0;
 int msgDecodedPayloadLength = 0;
@@ -28,12 +20,9 @@ unsigned char msgDecodedPayload[128];
 int msgDecodedPayloadIndex = 0;
 unsigned char calculatedChecksum = 0;
 
-unsigned char UartCalculateChecksum(int msgFunction,
-        int msgPayloadLength, unsigned char* msgPayload) {
+unsigned char UartCalculateChecksum(int msgFunction, int msgPayloadLength, unsigned char* msgPayload) {
     //Fonction prenant entree la trame et sa longueur pour calculer le checksum
     unsigned char checksum = 0;
-
-
     checksum ^= 0xFE;
     checksum ^= (unsigned char) (msgFunction >> 8);
     checksum ^= (unsigned char) (msgFunction >> 0);
@@ -47,8 +36,7 @@ unsigned char UartCalculateChecksum(int msgFunction,
 
 }
 
-void UartEncodeAndSendMessage(int msgFunction,
-        int msgPayloadLength, unsigned char* msgPayload) {
+void UartEncodeAndSendMessage(int msgFunction, int msgPayloadLength, unsigned char* msgPayload) {
     //Fonction d?encodage et d?envoi d?un message
 
     int pos = 0;
@@ -63,7 +51,7 @@ void UartEncodeAndSendMessage(int msgFunction,
     for (i = 0; i < msgPayloadLength; i++) {
         encodeMsg[pos++] = msgPayload[i];
     }
-    encodeMsg[pos++] = (unsigned char)(UartCalculateChecksum(msgFunction, msgPayloadLength, msgPayload));
+    encodeMsg[pos++] = (unsigned char) (UartCalculateChecksum(msgFunction, msgPayloadLength, msgPayload));
     SendMessage(encodeMsg, pos);
 }
 
@@ -93,7 +81,6 @@ void UartDecodeMessage(unsigned char c) {
             else if (msgDecodedPayloadLength >= 128)
                 rcvState = Waiting;
             else {
-                unsigned char msgDecodedPayload[msgDecodedPayloadLength];
                 msgDecodedPayloadIndex = 0;
                 rcvState = Payload;
             }
@@ -120,30 +107,38 @@ void UartDecodeMessage(unsigned char c) {
     }
 }
 
-
-void UartProcessDecodedMessage(int function,
-        int payloadLength, unsigned char* payload) {
-    //Fonction appelee apres le decodage pour executer l?action
-    //correspondant au message recu
+void UartProcessDecodedMessage(unsigned char function, unsigned char payloadLength, unsigned char* payload) {
+    //Fonction éappele èaprs le édcodage pour éexcuter l?action
+    //correspondant au message çreu
     switch (function) {
-        case TextMessage:
-            
+        case SET_ROBOT_STATE:
+            SetRobotState(payload[0]);
             break;
-
-        case DistancesTelemetre:
-            
+        case SET_ROBOT_MANUAL_CONTROL:
+            SetRobotAutoControlState(payload[0]);
             break;
-
-        case MotorSpeed:
-            
-            break;
-
-        case LEDValues:
-
+        default:
             break;
     }
 }
 
+void SetRobotState(unsigned char payload) {
+
+    stateRobot = payload;
+}
+
+void SetRobotAutoControlState(unsigned char payload) {
+
+    if (payload == 0) {
+        //Manuel
+        autoControlActivated = 0;
+
+    } else {
+        //Auto
+        autoControlActivated = 1;
+
+    }
+}
 
 //*************************************************************************/
 //Fonctions correspondant aux messages

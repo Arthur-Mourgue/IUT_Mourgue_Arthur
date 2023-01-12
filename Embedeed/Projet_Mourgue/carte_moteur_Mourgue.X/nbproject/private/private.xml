@@ -8,6 +8,8 @@
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/timer.c</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/main.c</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/CB_TX1.c</file>
+            <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/OS.h</file>
+            <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/Robot.c</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/nbproject/Makefile-default.mk</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/ToolBox.c</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/UART.c</file>
@@ -17,6 +19,7 @@
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/ADC.c</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/nbproject/Makefile-impl.mk</file>
             <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/PWM.c</file>
+            <file>file:/C:/GitHub/IUT_Mourgue_Arthur/Embedeed/Projet_Mourgue/carte_moteur_Mourgue.X/UART.h</file>
         </group>
     </open-files>
 </project-private>

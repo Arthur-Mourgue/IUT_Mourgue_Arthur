@@ -104,23 +104,31 @@ namespace InterfaceRobot
 
         private void buttonTest_Click(object sender, RoutedEventArgs e)
         {
-            string s = "Transmission";
-            byte[] payload = Encoding.ASCII.GetBytes(s);
-            UartEncodeAndSendMessage((int)MessageFunctions.TextMessage, payload.Length, payload);
+            //string s = "Transmission";
+            //byte[] payload = Encoding.ASCII.GetBytes(s);
+            //UartEncodeAndSendMessage((int)MessageFunctions.TextMessage, payload.Length, payload);
 
-            payload = new byte[] { 0, 0, 0 };
-            UartEncodeAndSendMessage((int)MessageFunctions.LEDValues, 3, payload);
+            //payload = new byte[] { 0, 0, 0 };
+            //UartEncodeAndSendMessage((int)MessageFunctions.LEDValues, 3, payload);
 
-            payload = new byte[3];
-            payload[0] = 20;
-            payload[1] = 30;
-            payload[2] = 40;
-            UartEncodeAndSendMessage((int)MessageFunctions.DistancesTelemetre, 3, payload);
+            //payload = new byte[3];
+            //payload[0] = 20;
+            //payload[1] = 30;
+            //payload[2] = 40;
+            //UartEncodeAndSendMessage((int)MessageFunctions.DistancesTelemetre, 3, payload);
 
-            payload = new byte[2];
-            payload[0] = 100;
-            payload[1] = 90;
-            UartEncodeAndSendMessage((int)MessageFunctions.MotorSpeed, 2, payload);
+            //payload = new byte[2];
+            //payload[0] = 100;
+            //payload[1] = 90;
+            //UartEncodeAndSendMessage((int)MessageFunctions.MotorSpeed, 2, payload);
+
+            byte[] payload = new byte[1];
+            payload[0] = 0;
+            UartEncodeAndSendMessage((int)MessageFunctions.SetRobotMode, 1, payload);
+
+            payload = new byte[1];
+            payload[0] = 34 ;
+            UartEncodeAndSendMessage((int)MessageFunctions.SetRobotState, 1, payload);
 
 
 
@@ -173,6 +181,8 @@ namespace InterfaceRobot
 
             serialPort1.Write(encodeMsg, 0, pos);
         }
+
+        
 
         public enum StateReception
         {
@@ -251,6 +261,8 @@ namespace InterfaceRobot
             }
         }
 
+        bool autoControlActivated;
+
         void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
             switch((MessageFunctions)msgFunction)
@@ -289,6 +301,26 @@ namespace InterfaceRobot
                     "␣-␣" + instant.ToString() + "␣ms";
                     break;
 
+                case MessageFunctions.SetRobotMode:
+                    //Mode Manuel
+                    if (msgPayload[0] == 0)
+                    {
+                        autoControlActivated = false;
+                        Automatique.IsChecked = false;
+                        Manuel.IsChecked = true;
+                    }
+                    else if (msgPayload[0] == 1)
+                    {
+                        autoControlActivated = true;
+                        Automatique.IsChecked = true;
+                        Manuel.IsChecked = false;
+                    }
+                    break;
+
+                case MessageFunctions.SetRobotState:
+
+                    break;
+
             }
         }
 
@@ -300,26 +332,63 @@ namespace InterfaceRobot
             DistancesTelemetre = 0x0030,
             MotorSpeed = 0x0040,
             RobotState = 0x0050,
+            SetRobotState = 0x0051,
+            SetRobotMode = 0x0052,
         }
 
         public enum StateRobot
         {
-            STATE_ATTENTE = 0,
-            STATE_ATTENTE_EN_COURS = 1,
-            STATE_AVANCE = 2,
-            STATE_AVANCE_EN_COURS = 3,
-            STATE_TOURNE_GAUCHE = 4,
-            STATE_TOURNE_GAUCHE_EN_COURS = 5,
-            STATE_TOURNE_DROITE = 6,
-            STATE_TOURNE_DROITE_EN_COURS = 7,
-            STATE_TOURNE_SUR_PLACE_GAUCHE = 8,
-            STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS = 9,
-            STATE_TOURNE_SUR_PLACE_DROITE = 10,
-            STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS = 11,
-            STATE_ARRET = 12,
-            STATE_ARRET_EN_COURS = 13,
-            STATE_RECULE = 14,
-            STATE_RECULE_EN_COURS = 15
+         STATE_ATTENTE = 0,
+         STATE_ATTENTE_EN_COURS = 1,
+         STATE_AVANCE = 2,
+         STATE_AVANCE_EN_COURS = 3,
+         STATE_TOURNE_GAUCHE = 4,
+         STATE_TOURNE_GAUCHE_EN_COURS = 5,
+         STATE_TOURNE_DROITE = 6,
+         STATE_TOURNE_DROITE_EN_COURS = 7,
+         STATE_TOURNE_SUR_PLACE_GAUCHE = 8,
+         STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS = 9,
+         STATE_TOURNE_SUR_PLACE_DROITE = 10,
+         STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS = 11,
+         STATE_RECULE_PAR_GAUCHE = 16,
+         STATE_RECULE_PAR_GAUCHE_EN_COURS = 17,
+         STATE_RECULE_PAR_DROITE = 18,
+         STATE_RECULE_PAR_DROITE_EN_COURS = 19,
+         STATE_ARRET = 12,
+         STATE_ARRET_EN_COURS = 13,
+         STATE_RECULE = 14,
+         STATE_RECULE_EN_COURS = 15,
+
+         STATE_RECULE_UN_PEU_GAUCHE = 20,
+         STATE_RECULE_UN_PEU_GAUCHE_EN_COURS = 21,
+         STATE_RECULE_UN_PEU_DROITE = 22,
+         STATE_RECULE_UN_PEU_DROITE_EN_COURS = 23,
+         STATE_TOURNE_UN_PEU_GAUCHE = 24,
+         STATE_TOURNE_UN_PEU_GAUCHE_EN_COURS = 25,
+         STATE_TOURNE_UN_PEU_DROITE = 26,
+         STATE_TOURNE_UN_PEU_DROITE_EN_COURS = 27,
+
+         STATE_TOURNE_BCP_GAUCHE = 28,
+         STATE_TOURNE_BCP_GAUCHE_EN_COURS = 29,
+         STATE_TOURNE_BCP_DROITE = 30,
+         STATE_TOURNE_BCP_DROITE_EN_COURS = 31,
+         STATE_180_DROITE = 32,
+         STATE_180_DROITE_EN_COURS = 33,
+         STATE_180_GAUCHE = 40,
+         STATE_180_GAUCHE_EN_COURS = 41,
+         STATE_180 = 42,
+         STATE_180_EN_COURS = 43,
+         STATE_90_DROITE = 44,
+         STATE_90_DROITE_EN_COURS = 45,
+         STATE_90_GAUCHE = 46,
+         STATE_90_GAUCHE_EN_COURS = 47,
+         STATE_TOURNE_MINI_GAUCHE = 38,
+         STATE_TOURNE_MINI_GAUCHE_EN_COURS = 39,
+         STATE_TOURNE_MINI_DROITE = 36,
+         STATE_TOURNE_MINI_DROITE_EN_COURS = 37,
+
+         STATE_CELEBRATION = 34,
+         STATE_CELEBRATION_EN_COURS = 35,
         }
     }
 
