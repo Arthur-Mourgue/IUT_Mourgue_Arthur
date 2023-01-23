@@ -13,6 +13,7 @@
 #include "CB_RX1.h"
 #include "libpic30.h"
 #include "UART_Protocol.h"
+#include "QEI.h"
 
 
 unsigned int *result;
@@ -30,6 +31,9 @@ int main(void) {
 
     InitPWM();
     InitADC1();
+    
+    InitQEI1();
+    InitQEI2();
 
 
     LED_BLANCHE = 1;
@@ -81,7 +85,7 @@ int main(void) {
             //                LED_BLANCHE = 0;
             //            }
 
-            OperatingSystemLoop();
+            
             //SendMessage(payload, 7);
 
 

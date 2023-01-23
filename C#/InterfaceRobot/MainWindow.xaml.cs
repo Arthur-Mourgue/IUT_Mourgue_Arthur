@@ -31,7 +31,7 @@ namespace InterfaceRobot
         public MainWindow()
         {
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM10", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM9", 115200, Parity.None, 8, StopBits.One);
             serialPort1.Open();
 
             serialPort1.DataReceived += SerialPort1_DataReceived;
@@ -321,6 +321,12 @@ namespace InterfaceRobot
 
                     break;
 
+                case MessageFunctions.PositionData:
+
+                    receptionTextBox.Text += msgPayload[0]; 
+                    break;
+
+
             }
         }
 
@@ -334,6 +340,7 @@ namespace InterfaceRobot
             RobotState = 0x0050,
             SetRobotState = 0x0051,
             SetRobotMode = 0x0052,
+            PositionData = 0x0061,
         }
 
         public enum StateRobot

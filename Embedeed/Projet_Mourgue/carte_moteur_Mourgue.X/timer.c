@@ -6,6 +6,7 @@
 #include "adc.h"
 #include "main.h"
 #include "OS.h"
+#include "QEI.h"
 
 unsigned char toggle = 0;
 
@@ -83,6 +84,8 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
     IFS0bits.T1IF = 0;
     PWMUpdateSpeed();
     ADC1StartConversionSequence();
+    QEIUpdateData();
+        
     LED_BLANCHE = !LED_BLANCHE;
 }
 
@@ -91,6 +94,7 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
 void __attribute__((interrupt, no_auto_psv)) _T4Interrupt(void) {
     IFS1bits.T4IF = 0;
     timestamp++;
+    if(timestamp%100 == 0)SendPositionData();
     OperatingSystemLoop();
 }
 
