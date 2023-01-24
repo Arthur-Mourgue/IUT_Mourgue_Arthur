@@ -322,8 +322,24 @@ namespace InterfaceRobot
                     break;
 
                 case MessageFunctions.PositionData:
+                    robot.TimerOdo = (((int)msgPayload[0]) << 24) + (((int)msgPayload[1]) << 16)
+                    + (((int)msgPayload[2]) << 8) + ((int)msgPayload[3]);
+                    var tab = BitConverter.ToSingle(msgPayload, 4);
+                    robot.positionXOdo = tab;
+                    tab = BitConverter.ToSingle(msgPayload, 8);
+                    robot.positionYOdo = tab;
+                    tab = BitConverter.ToSingle(msgPayload, 12);
+                    robot.AngleROdo = tab;
+                    tab = BitConverter.ToSingle(msgPayload, 16);
+                    robot.VitesseAOdo = tab;
+                    tab = BitConverter.ToSingle(msgPayload,20);
+                    robot.VitesseLOdo = tab;
+                    receptionTextBox.Text = "\nTimer odo : " + robot.TimerOdo;
+                    receptionTextBox.Text += "\nPosition X odo : " + robot.positionXOdo;
+                    receptionTextBox.Text += "\nPosition Y odo : " + robot.positionYOdo;
+                    receptionTextBox.Text += "\nVitesse A odo : " + robot.VitesseAOdo;
+                    receptionTextBox.Text += "\nVitesse L odo : " + robot.VitesseLOdo;
 
-                    receptionTextBox.Text += msgPayload[0]; 
                     break;
 
 

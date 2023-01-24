@@ -53,8 +53,8 @@ void QEIUpdateData() {
     delta_d = QeiDroitPosition - QeiDroitPosition_T_1;
     delta_g = QeiGauchePosition - QeiGauchePosition_T_1;
     //delta_theta = atan((delta_d - delta_g) / DISTROUES);
-    theta = (delta_d - delta_g) / DISTROUES;
-    dx = (delta_d + delta_g) / 2;
+    delta_d = ((robotState.vitesseDroitFromOdometry + robotState.vitesseGaucheFromOdometry)/2)*1/FREQ_ECH_QEI;
+    delta_theta = ((robotState.vitesseDroitFromOdometry - robotState.vitesseGaucheFromOdometry)/2*DISTROUES)*1/FREQ_ECH_QEI;
     //Calcul des vitesses
     //attention àremultiplier par la éfrquence dé?chantillonnage
     robotState.vitesseDroitFromOdometry = delta_d*FREQ_ECH_QEI;
@@ -67,9 +67,9 @@ void QEIUpdateData() {
     robotState.yPosFromOdometry_1 = robotState.yPosFromOdometry;
     robotState.angleRadianFromOdometry_1 = robotState.angleRadianFromOdometry;
     //Calcul des positions dans le referentiel du terrain
-    robotState.xPosFromOdometry = robotState.xPosFromOdometry + (robotState.vitesseDroitFromOdometry + robotState.vitesseGaucheFromOdometry) * cos(theta) / 2 * FREQ_ECH_QEI;
-    robotState.yPosFromOdometry = robotState.yPosFromOdometry + (robotState.vitesseDroitFromOdometry + robotState.vitesseGaucheFromOdometry) * cos(theta) / 2 * FREQ_ECH_QEI;
-    robotState.angleRadianFromOdometry = robotState.angleRadianFromOdometry + (robotState.vitesseDroitFromOdometry - robotState.vitesseGaucheFromOdometry) / 2 * DISTROUES*FREQ_ECH_QEI;
+    robotState.xPosFromOdometry = robotState.xPosFromOdometry + delta_d*cos(theta);
+    robotState.yPosFromOdometry = robotState.yPosFromOdometry + delta_d*sin(theta);
+    robotState.angleRadianFromOdometry = robotState.angleRadianFromOdometry + delta_theta;
     if (robotState.angleRadianFromOdometry > PI)
         robotState.angleRadianFromOdometry -= 2 * PI;
     if (robotState.angleRadianFromOdometry < -PI)
