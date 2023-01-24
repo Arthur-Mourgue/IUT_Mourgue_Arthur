@@ -41,7 +41,7 @@ namespace InterfaceRobot
             timerAffichage.Tick += TimerAffichage_Tick; ;
             timerAffichage.Start();
         }
-        
+
 
         private void SerialPort1_DataReceived(object sender, DataReceivedArgs e)
         {
@@ -54,11 +54,11 @@ namespace InterfaceRobot
 
         private void TimerAffichage_Tick(object sender, EventArgs e)
         {
-            while(robot.byteListReceived.Count() > 0)
+            while (robot.byteListReceived.Count() > 0)
             {
                 var c = robot.byteListReceived.Dequeue();
                 //receptionTextBox.Text += "0x" + c.ToString("X2") + " ";    
-                DecodeMessage(c);            
+                DecodeMessage(c);
             }
             //if (robot.receivedText != "")
             //{
@@ -102,6 +102,40 @@ namespace InterfaceRobot
             receptionTextBox.Text = "";
         }
 
+
+
+        bool mode = true;
+        private void buttonModeAuto_Click(object sender, RoutedEventArgs e)
+        {
+            switch (mode)
+            {
+                case (false): buttonAuto.Background = Brushes.Green; break;
+                case (true): buttonAuto.Background = Brushes.Red; break;
+            }
+
+            byte[] payload = new byte[1];
+
+            if (mode == false)
+            {
+                // Send mode auto
+                payload[0] = 1;
+                UartEncodeAndSendMessage((int)MessageFunctions.SetRobotMode, 1, payload);
+                mode = true;
+            }
+            
+            else
+            {
+                // Send mode manu
+                payload[0] = 0;
+                UartEncodeAndSendMessage((int)MessageFunctions.SetRobotMode, 1, payload);
+                mode = false;
+            }
+
+        }
+
+
+
+
         private void buttonTest_Click(object sender, RoutedEventArgs e)
         {
             //string s = "Transmission";
@@ -127,7 +161,7 @@ namespace InterfaceRobot
             UartEncodeAndSendMessage((int)MessageFunctions.SetRobotMode, 1, payload);
 
             payload = new byte[1];
-            payload[0] = 34 ;
+            payload[0] = 34;
             UartEncodeAndSendMessage((int)MessageFunctions.SetRobotState, 1, payload);
 
 
@@ -154,7 +188,7 @@ namespace InterfaceRobot
             checksum ^= (byte)(msgPayloadLength >> 8);
             checksum ^= (byte)(msgPayloadLength >> 0);
             int i;
-            for (i = 0; i < msgPayloadLength ; i++)
+            for (i = 0; i < msgPayloadLength; i++)
             {
                 checksum ^= msgPayload[i];
             }
@@ -163,7 +197,7 @@ namespace InterfaceRobot
         }
 
         void UartEncodeAndSendMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
-        { 
+        {
             int pos = 0;
             byte[] encodeMsg = new byte[msgPayloadLength + 6];
 
@@ -172,7 +206,7 @@ namespace InterfaceRobot
             encodeMsg[pos++] = (byte)(msgFunction >> 0);
             encodeMsg[pos++] = (byte)(msgPayloadLength >> 8);
             encodeMsg[pos++] = (byte)(msgPayloadLength >> 0);
-            for (int i = 0 ; i < msgPayloadLength; i++)
+            for (int i = 0; i < msgPayloadLength; i++)
             {
                 encodeMsg[pos++] ^= msgPayload[i];
             }
@@ -182,7 +216,7 @@ namespace InterfaceRobot
             serialPort1.Write(encodeMsg, 0, pos);
         }
 
-        
+
 
         public enum StateReception
         {
@@ -265,7 +299,7 @@ namespace InterfaceRobot
 
         void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
-            switch((MessageFunctions)msgFunction)
+            switch ((MessageFunctions)msgFunction)
             {
                 case MessageFunctions.TextMessage:
                     receptionTextBox.Text += Encoding.ASCII.GetString(msgPayload);
@@ -283,7 +317,7 @@ namespace InterfaceRobot
                     break;
 
                 case MessageFunctions.LEDValues:
-                    if(msgPayload[0] == 1) Led_1.IsChecked = true;
+                    if (msgPayload[0] == 1) Led_1.IsChecked = true;
                     else Led_1.IsChecked = false;
 
                     if (msgPayload[1] == 1) Led_2.IsChecked = true;
@@ -301,21 +335,6 @@ namespace InterfaceRobot
                     "␣-␣" + instant.ToString() + "␣ms";
                     break;
 
-                case MessageFunctions.SetRobotMode:
-                    //Mode Manuel
-                    if (msgPayload[0] == 0)
-                    {
-                        autoControlActivated = false;
-                        Automatique.IsChecked = false;
-                        Manuel.IsChecked = true;
-                    }
-                    else if (msgPayload[0] == 1)
-                    {
-                        autoControlActivated = true;
-                        Automatique.IsChecked = true;
-                        Manuel.IsChecked = false;
-                    }
-                    break;
 
                 case MessageFunctions.SetRobotState:
 
@@ -332,13 +351,14 @@ namespace InterfaceRobot
                     robot.AngleROdo = tab;
                     tab = BitConverter.ToSingle(msgPayload, 16);
                     robot.VitesseAOdo = tab;
-                    tab = BitConverter.ToSingle(msgPayload,20);
+                    tab = BitConverter.ToSingle(msgPayload, 20);
                     robot.VitesseLOdo = tab;
-                    receptionTextBox.Text = "\nTimer odo : " + robot.TimerOdo;
-                    receptionTextBox.Text += "\nPosition X odo : " + robot.positionXOdo;
-                    receptionTextBox.Text += "\nPosition Y odo : " + robot.positionYOdo;
-                    receptionTextBox.Text += "\nVitesse A odo : " + robot.VitesseAOdo;
-                    receptionTextBox.Text += "\nVitesse L odo : " + robot.VitesseLOdo;
+                    TimerOdo.Content = robot.TimerOdo;
+                    Position_X.Content = robot.positionXOdo;
+                    Position_Y.Content = robot.positionYOdo;
+                    Vitesse_L.Content = robot.VitesseLOdo;
+                    Vitesse_A.Content = robot.VitesseAOdo;
+                    AngleOdo.Content = robot.AngleROdo;
 
                     break;
 
@@ -361,59 +381,61 @@ namespace InterfaceRobot
 
         public enum StateRobot
         {
-         STATE_ATTENTE = 0,
-         STATE_ATTENTE_EN_COURS = 1,
-         STATE_AVANCE = 2,
-         STATE_AVANCE_EN_COURS = 3,
-         STATE_TOURNE_GAUCHE = 4,
-         STATE_TOURNE_GAUCHE_EN_COURS = 5,
-         STATE_TOURNE_DROITE = 6,
-         STATE_TOURNE_DROITE_EN_COURS = 7,
-         STATE_TOURNE_SUR_PLACE_GAUCHE = 8,
-         STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS = 9,
-         STATE_TOURNE_SUR_PLACE_DROITE = 10,
-         STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS = 11,
-         STATE_RECULE_PAR_GAUCHE = 16,
-         STATE_RECULE_PAR_GAUCHE_EN_COURS = 17,
-         STATE_RECULE_PAR_DROITE = 18,
-         STATE_RECULE_PAR_DROITE_EN_COURS = 19,
-         STATE_ARRET = 12,
-         STATE_ARRET_EN_COURS = 13,
-         STATE_RECULE = 14,
-         STATE_RECULE_EN_COURS = 15,
+            STATE_ATTENTE = 0,
+            STATE_ATTENTE_EN_COURS = 1,
+            STATE_AVANCE = 2,
+            STATE_AVANCE_EN_COURS = 3,
+            STATE_TOURNE_GAUCHE = 4,
+            STATE_TOURNE_GAUCHE_EN_COURS = 5,
+            STATE_TOURNE_DROITE = 6,
+            STATE_TOURNE_DROITE_EN_COURS = 7,
+            STATE_TOURNE_SUR_PLACE_GAUCHE = 8,
+            STATE_TOURNE_SUR_PLACE_GAUCHE_EN_COURS = 9,
+            STATE_TOURNE_SUR_PLACE_DROITE = 10,
+            STATE_TOURNE_SUR_PLACE_DROITE_EN_COURS = 11,
+            STATE_RECULE_PAR_GAUCHE = 16,
+            STATE_RECULE_PAR_GAUCHE_EN_COURS = 17,
+            STATE_RECULE_PAR_DROITE = 18,
+            STATE_RECULE_PAR_DROITE_EN_COURS = 19,
+            STATE_ARRET = 12,
+            STATE_ARRET_EN_COURS = 13,
+            STATE_RECULE = 14,
+            STATE_RECULE_EN_COURS = 15,
 
-         STATE_RECULE_UN_PEU_GAUCHE = 20,
-         STATE_RECULE_UN_PEU_GAUCHE_EN_COURS = 21,
-         STATE_RECULE_UN_PEU_DROITE = 22,
-         STATE_RECULE_UN_PEU_DROITE_EN_COURS = 23,
-         STATE_TOURNE_UN_PEU_GAUCHE = 24,
-         STATE_TOURNE_UN_PEU_GAUCHE_EN_COURS = 25,
-         STATE_TOURNE_UN_PEU_DROITE = 26,
-         STATE_TOURNE_UN_PEU_DROITE_EN_COURS = 27,
+            STATE_RECULE_UN_PEU_GAUCHE = 20,
+            STATE_RECULE_UN_PEU_GAUCHE_EN_COURS = 21,
+            STATE_RECULE_UN_PEU_DROITE = 22,
+            STATE_RECULE_UN_PEU_DROITE_EN_COURS = 23,
+            STATE_TOURNE_UN_PEU_GAUCHE = 24,
+            STATE_TOURNE_UN_PEU_GAUCHE_EN_COURS = 25,
+            STATE_TOURNE_UN_PEU_DROITE = 26,
+            STATE_TOURNE_UN_PEU_DROITE_EN_COURS = 27,
 
-         STATE_TOURNE_BCP_GAUCHE = 28,
-         STATE_TOURNE_BCP_GAUCHE_EN_COURS = 29,
-         STATE_TOURNE_BCP_DROITE = 30,
-         STATE_TOURNE_BCP_DROITE_EN_COURS = 31,
-         STATE_180_DROITE = 32,
-         STATE_180_DROITE_EN_COURS = 33,
-         STATE_180_GAUCHE = 40,
-         STATE_180_GAUCHE_EN_COURS = 41,
-         STATE_180 = 42,
-         STATE_180_EN_COURS = 43,
-         STATE_90_DROITE = 44,
-         STATE_90_DROITE_EN_COURS = 45,
-         STATE_90_GAUCHE = 46,
-         STATE_90_GAUCHE_EN_COURS = 47,
-         STATE_TOURNE_MINI_GAUCHE = 38,
-         STATE_TOURNE_MINI_GAUCHE_EN_COURS = 39,
-         STATE_TOURNE_MINI_DROITE = 36,
-         STATE_TOURNE_MINI_DROITE_EN_COURS = 37,
+            STATE_TOURNE_BCP_GAUCHE = 28,
+            STATE_TOURNE_BCP_GAUCHE_EN_COURS = 29,
+            STATE_TOURNE_BCP_DROITE = 30,
+            STATE_TOURNE_BCP_DROITE_EN_COURS = 31,
+            STATE_180_DROITE = 32,
+            STATE_180_DROITE_EN_COURS = 33,
+            STATE_180_GAUCHE = 40,
+            STATE_180_GAUCHE_EN_COURS = 41,
+            STATE_180 = 42,
+            STATE_180_EN_COURS = 43,
+            STATE_90_DROITE = 44,
+            STATE_90_DROITE_EN_COURS = 45,
+            STATE_90_GAUCHE = 46,
+            STATE_90_GAUCHE_EN_COURS = 47,
+            STATE_TOURNE_MINI_GAUCHE = 38,
+            STATE_TOURNE_MINI_GAUCHE_EN_COURS = 39,
+            STATE_TOURNE_MINI_DROITE = 36,
+            STATE_TOURNE_MINI_DROITE_EN_COURS = 37,
 
-         STATE_CELEBRATION = 34,
-         STATE_CELEBRATION_EN_COURS = 35,
+            STATE_CELEBRATION = 34,
+            STATE_CELEBRATION_EN_COURS = 35,
         }
+
+
     }
-
-
 }
+
+

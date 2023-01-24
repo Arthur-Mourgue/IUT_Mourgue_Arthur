@@ -8,28 +8,31 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="120"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="130"/>
+            <RowDefinition Height="130"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="223*"/>
+            <ColumnDefinition Width="29*"/>
+            <ColumnDefinition Width="145*"/>
+            <ColumnDefinition Width="396*"/>
         </Grid.ColumnDefinitions>
-        <GroupBox x:Name="Emission" Header="Emission" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Margin="10">
-            <TextBox x:Name="emissionTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" KeyUp="emissionTextBox_KeyUp"/>
+        <GroupBox x:Name="Emission" Header="Emission" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Margin="10,10,10,0" Grid.ColumnSpan="3">
+            <TextBox x:Name="emissionTextBox" HorizontalAlignment="Stretch" AcceptsReturn="True" KeyUp="emissionTextBox_KeyUp" Margin="0,0,0,3"/>
         </GroupBox>
-        <GroupBox x:Name="Reception" Header="Reception" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Margin="10">
-            <TextBox x:Name="receptionTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True" TextWrapping="Wrap"/>
+        <GroupBox x:Name="Reception" Header="Reception" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Grid.Row="0" Margin="10" Grid.RowSpan="2">
+            <TextBox x:Name="receptionTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True" TextWrapping="Wrap" Margin="0,0,0,1"/>
         </GroupBox>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center">
-            <Button x:Name="buttonEnvoyer" Content="Envoi" Click="buttonEnvoyer_Click" Margin="10" Width="100"/>
-            <Button x:Name="buttonClear" Content="Clear" Click="buttonClear_Click" Margin="10" Width="100"/>
-            <Button x:Name="buttonTest" Content="Test" Click="buttonTest_Click"  Margin="10" Width="100"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,77" Width="397" Grid.ColumnSpan="3" Grid.Row="1">
+            <Button x:Name="buttonEnvoyer" Content="Envoi" Click="buttonEnvoyer_Click" Margin="10" Width="80"/>
+            <Button x:Name="buttonClear" Content="Clear" Click="buttonClear_Click" Margin="10" Width="80"/>
+            <Button x:Name="buttonTest" Content="Test" Click="buttonTest_Click"  Margin="10" Width="80"/>
+            <Button x:Name="buttonAuto" Content="Mode Auto" Click="buttonModeAuto_Click"  Margin="10" Width="80"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="2">
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="4">
             <GroupBox Header="Leds">
                 <StackPanel>
                     <CheckBox x:Name="Led_1" Content="Led 1 " Height="30" VerticalContentAlignment="Center"/>
@@ -39,16 +42,16 @@
             </GroupBox>
             <GroupBox Header="Telemètres IR" >
                 <StackPanel Orientation="Horizontal" Width="105">
-                <StackPanel>
-                    <Label Content="IR Gauche : " Height="30" VerticalContentAlignment="Center" />
-                    <Label Content="IR Centre : " Height="30" VerticalContentAlignment="Center" />
-                    <Label Content="IR Droit  : " Height="30" VerticalContentAlignment="Center" />
-                </StackPanel>
+                    <StackPanel>
+                        <Label Content="IR Gauche : " Height="30" VerticalContentAlignment="Center" />
+                        <Label Content="IR Centre : " Height="30" VerticalContentAlignment="Center" />
+                        <Label Content="IR Droit  : " Height="30" VerticalContentAlignment="Center" />
+                    </StackPanel>
                     <StackPanel  Width="35">
-                    <Label x:Name="IR_gauche" Content="0" Height="30" VerticalContentAlignment="Center" />
-                    <Label x:Name="IR_centre" Content="0" Height="30" VerticalContentAlignment="Center" />
-                    <Label x:Name="IR_droit" Content="0" Height="30" VerticalContentAlignment="Center" />
-                </StackPanel>
+                        <Label x:Name="IR_gauche" Content="0" Height="30" VerticalContentAlignment="Center" />
+                        <Label x:Name="IR_centre" Content="0" Height="30" VerticalContentAlignment="Center" />
+                        <Label x:Name="IR_droit" Content="0" Height="30" VerticalContentAlignment="Center" />
+                    </StackPanel>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Moteurs" >
@@ -67,19 +70,53 @@
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Mode" Width="50">
-                <StackPanel>
-                    <CheckBox x:Name="Automatique" Content=" A" Height="45" VerticalContentAlignment="Center"/>
-                    <CheckBox x:Name="Manuel" Content=" M" Height="45" VerticalContentAlignment="Center" />
+            <GroupBox Header="Data QEI" >
+                <StackPanel Orientation="Horizontal" Width="200" >
+                    <StackPanel>
+
+                        <Label  Content="Timer : "  VerticalContentAlignment="Center" Height="30" />
+                        <Label  Content="Vitesse L : " VerticalContentAlignment="Center" Height="30" />
+                        <Label  Content="Vitesse A : " VerticalContentAlignment="Center" Height="30" />
+                    </StackPanel>
+                    <StackPanel Width="80">
+                        <Label x:Name="TimerOdo" Content="0" VerticalContentAlignment="Center" Height="30"  />
+                        <Label x:Name="Vitesse_L" Content="0" VerticalContentAlignment="Center" Height="30" />
+                        <Label x:Name="Vitesse_A" Content="0" VerticalContentAlignment="Center" Height="30" />
+                    </StackPanel>
+                    <StackPanel >
+                        <Label Content="ms" VerticalContentAlignment="Center" Height="30" />
+                        <Label Content="mm/s" VerticalContentAlignment="Center" Height="30" />
+                        <Label Content="" VerticalContentAlignment="Center" Height="30" />
+                    </StackPanel>
                 </StackPanel>
             </GroupBox>
-            
+            <GroupBox Header="Data QEI" >
+                <StackPanel Orientation="Horizontal" Width="200" >
+                    <StackPanel >
+                        <Label  Content="Position X : "  Height="30" VerticalContentAlignment="Center" />
+                        <Label  Content="Position Y : " Height="30" VerticalContentAlignment="Center" />
+                        <Label  Content="Angle : " Height="30" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Width="80">
+                        <Label x:Name="Position_X" Height="30" Content="0 " VerticalContentAlignment="Center"/>
+                        <Label x:Name="Position_Y" Height="30" Content="0 " VerticalContentAlignment="Center"/>
+                        <Label x:Name="AngleOdo" Height="30" Content="0" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel >
+                        <Label Content="mm" Height="30" VerticalContentAlignment="Center"/>
+                        <Label Content="mm" Height="30" VerticalContentAlignment="Center" />
+                        <Label Content="°" Height="30" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+
 
         </StackPanel>
-        
 
 
-        
+
+
 
     </Grid>
 </Window>
