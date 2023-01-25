@@ -16,17 +16,24 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using MouseKeyboardActivityMonitor.WinApi;
+using MouseKeyboardActivityMonitor;
+
 
 namespace InterfaceRobot
 {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
+    /// 
     public partial class MainWindow : Window
     {
         ReliableSerialPort serialPort1;
         DispatcherTimer timerAffichage;
         Robot robot = new Robot();
+        private readonly KeyboardHookListener m_KeyboardHookManager;
+        
+
 
         public MainWindow()
         {
@@ -36,9 +43,16 @@ namespace InterfaceRobot
 
             serialPort1.DataReceived += SerialPort1_DataReceived;
 
+            oscilloSpeed.AddOrUpdateLine(1, 200, "Ligne1");
+
+            m_KeyboardHookManager = new KeyboardHookListener(new GlobalHooker());
+            m_KeyboardHookManager.Enabled = true;
+            m_KeyboardHookManager.KeyDown += HookManager_KeyDown;
+
+
             timerAffichage = new DispatcherTimer();
             timerAffichage.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            timerAffichage.Tick += TimerAffichage_Tick; ;
+            timerAffichage.Tick += TimerAffichage_Tick;
             timerAffichage.Start();
         }
 
@@ -54,6 +68,9 @@ namespace InterfaceRobot
 
         private void TimerAffichage_Tick(object sender, EventArgs e)
         {
+
+            oscilloSpeed.AddPointToLine(1, robot.TimerOdo, robot.positionYOdo);
+
             while (robot.byteListReceived.Count() > 0)
             {
                 var c = robot.byteListReceived.Dequeue();

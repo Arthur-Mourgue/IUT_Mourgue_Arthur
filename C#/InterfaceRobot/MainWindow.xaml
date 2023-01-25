@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InterfaceRobot"
+        xmlns:oscillo="clr-namespace:WpfOscilloscopeControl;assembly=WpfOscilloscopeControl"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
@@ -18,21 +19,22 @@
             <ColumnDefinition Width="145*"/>
             <ColumnDefinition Width="396*"/>
         </Grid.ColumnDefinitions>
-        <GroupBox x:Name="Emission" Header="Emission" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Margin="10,10,10,0" Grid.ColumnSpan="3">
-            <TextBox x:Name="emissionTextBox" HorizontalAlignment="Stretch" AcceptsReturn="True" KeyUp="emissionTextBox_KeyUp" Margin="0,0,0,3"/>
+        <GroupBox x:Name="Emission" Header="Emission" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Margin="10,10,10,62" Grid.ColumnSpan="3">
+            <TextBox x:Name="emissionTextBox" HorizontalAlignment="Stretch" AcceptsReturn="True" KeyUp="emissionTextBox_KeyUp" TextWrapping="Wrap" Margin="0,0,0,3"/>
         </GroupBox>
         <GroupBox x:Name="Reception" Header="Reception" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Grid.Row="0" Margin="10" Grid.RowSpan="2">
             <TextBox x:Name="receptionTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True" TextWrapping="Wrap" Margin="0,0,0,1"/>
         </GroupBox>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,77" Width="397" Grid.ColumnSpan="3" Grid.Row="1">
-            <Button x:Name="buttonEnvoyer" Content="Envoi" Click="buttonEnvoyer_Click" Margin="10" Width="80"/>
-            <Button x:Name="buttonClear" Content="Clear" Click="buttonClear_Click" Margin="10" Width="80"/>
-            <Button x:Name="buttonTest" Content="Test" Click="buttonTest_Click"  Margin="10" Width="80"/>
-            <Button x:Name="buttonAuto" Content="Mode Auto" Click="buttonModeAuto_Click"  Margin="10" Width="80"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,89,0,33" Width="397" Grid.ColumnSpan="3">
+            <Button x:Name="buttonEnvoyer" Content="Envoi" Click="buttonEnvoyer_Click" Margin="5" Width="80"/>
+            <Button x:Name="buttonClear" Content="Clear" Click="buttonClear_Click" Margin="5" Width="80"/>
+            <Button x:Name="buttonTest" Content="Test" Click="buttonTest_Click"  Margin="5" Width="80"/>
+            <Button x:Name="buttonAuto" Content="Mode Auto" Click="buttonModeAuto_Click"  Margin="5" Width="80"/>
         </StackPanel>
-
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="4">
+        <GroupBox Header="Oscilloscope" Margin="10,123,10,121" Grid.RowSpan="3" Grid.ColumnSpan="3"/>
+        <oscillo:WpfOscilloscope x:Name="oscilloSpeed" Margin="21,141,20,0" Grid.RowSpan="2" Grid.ColumnSpan="3"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="4" Margin="0,10,0,0">
             <GroupBox Header="Leds">
                 <StackPanel>
                     <CheckBox x:Name="Led_1" Content="Led 1 " Height="30" VerticalContentAlignment="Center"/>
@@ -73,7 +75,6 @@
             <GroupBox Header="Data QEI" >
                 <StackPanel Orientation="Horizontal" Width="200" >
                     <StackPanel>
-
                         <Label  Content="Timer : "  VerticalContentAlignment="Center" Height="30" />
                         <Label  Content="Vitesse L : " VerticalContentAlignment="Center" Height="30" />
                         <Label  Content="Vitesse A : " VerticalContentAlignment="Center" Height="30" />
