@@ -18,7 +18,10 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using MouseKeyboardActivityMonitor.WinApi;
 using MouseKeyboardActivityMonitor;
-
+using SciChart.Charting.Visuals;
+using WpfAsservissementDisplay;
+using Utilities;
+using Constants;
 
 namespace InterfaceRobot
 {
@@ -32,11 +35,12 @@ namespace InterfaceRobot
         DispatcherTimer timerAffichage;
         Robot robot = new Robot();
         private readonly KeyboardHookListener m_KeyboardHookManager;
-        
 
 
         public MainWindow()
         {
+            SciChartSurface.SetRuntimeLicenseKey("3veHyjwEIEQaDV8qd5l2Fi1mSsLic+DqdTuOS3i9xeOMjpqiWBdgmhBRMwHu9/5w2wXOHVOTWENlMvOMQjVNxg47zsEngF97+UN0UurixjoLk08HXwVNN2y2nYEhXWz63hbqsRmKHBDmtV95oK/rMODj+9r53ZO2qNGEHaR6InmuW3v9OjooV64GqiZXLYICip7TQR/f6sy3gEkVX4hYFJiWjBo7KEuIRbOXelmTRC0y2YYzDgOJacDbZ20LZdAhzt+zFY/aDjmqN3MXMqaZ8cAwWjx35KYKNJ02jvElvjD4T9wwM1wuuKEg9kvDmMvTWJjSzIOdGNB1vzmwNHkK4WRuoK2x5rsqZsWhTGsp728XR/xJoxAUrd71laBiwobq+BC5SaE1hufOgoH4Bh3tMs4c9tKo2TZ+j2gv1cIEEfYDQlUH0aLoJGDSc3EWoOCmXQ9MkXH+irfMwxlHBa0GrFLoLl8AjHJ7iNuX7g7gu1ceGXFZ6A88tMse2ohAS2Eibw==");
+
             InitializeComponent();
             serialPort1 = new ReliableSerialPort("COM9", 115200, Parity.None, 8, StopBits.One);
             serialPort1.Open();
@@ -44,10 +48,12 @@ namespace InterfaceRobot
             serialPort1.DataReceived += SerialPort1_DataReceived;
 
             oscilloSpeed.AddOrUpdateLine(1, 200, "Ligne1");
+            oscilloPos.AddOrUpdateLine(2, 200, "Ligne1");
+
 
             m_KeyboardHookManager = new KeyboardHookListener(new GlobalHooker());
             m_KeyboardHookManager.Enabled = true;
-            m_KeyboardHookManager.KeyDown += HookManager_KeyDown;
+            
 
 
             timerAffichage = new DispatcherTimer();
@@ -69,7 +75,15 @@ namespace InterfaceRobot
         private void TimerAffichage_Tick(object sender, EventArgs e)
         {
 
-            oscilloSpeed.AddPointToLine(1, robot.TimerOdo, robot.positionYOdo);
+            oscilloSpeed.AddPointToLine(1, robot.TimerOdo , robot.VitesseLOdo);
+            oscilloSpeed.ChangeLineColor(1, Color.FromRgb(0, 255, 0));
+
+            oscilloPos.AddPointToLine(2, robot.positionXOdo, robot.positionYOdo);
+            oscilloPos.ChangeLineColor(2, Color.FromRgb(0, 0, 255));
+
+
+            asservSpeedDisplay.UpdatePolarOdometrySpeed(robot.positionXOdo, robot.AngleROdo);
+            asservSpeedDisplay.UpdateDisplay();
 
             while (robot.byteListReceived.Count() > 0)
             {
