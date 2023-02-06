@@ -4,7 +4,7 @@
 
 typedef struct robotStateBITS {
 
-    union {
+
 
         struct {
             unsigned char taskEnCours;
@@ -28,10 +28,11 @@ typedef struct robotStateBITS {
             float angleRadianFromOdometry ;
             float angleRadianFromOdometry_1 ;
             
-        }
-        ;
-    }
-    ;
+            PidCorrector PidX;
+            PidCorrector PidTheta;
+            
+        };
+
 } ROBOT_STATE_BITS;
 
 extern volatile ROBOT_STATE_BITS robotState;

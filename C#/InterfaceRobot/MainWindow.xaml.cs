@@ -42,7 +42,7 @@ namespace InterfaceRobot
             SciChartSurface.SetRuntimeLicenseKey("3veHyjwEIEQaDV8qd5l2Fi1mSsLic+DqdTuOS3i9xeOMjpqiWBdgmhBRMwHu9/5w2wXOHVOTWENlMvOMQjVNxg47zsEngF97+UN0UurixjoLk08HXwVNN2y2nYEhXWz63hbqsRmKHBDmtV95oK/rMODj+9r53ZO2qNGEHaR6InmuW3v9OjooV64GqiZXLYICip7TQR/f6sy3gEkVX4hYFJiWjBo7KEuIRbOXelmTRC0y2YYzDgOJacDbZ20LZdAhzt+zFY/aDjmqN3MXMqaZ8cAwWjx35KYKNJ02jvElvjD4T9wwM1wuuKEg9kvDmMvTWJjSzIOdGNB1vzmwNHkK4WRuoK2x5rsqZsWhTGsp728XR/xJoxAUrd71laBiwobq+BC5SaE1hufOgoH4Bh3tMs4c9tKo2TZ+j2gv1cIEEfYDQlUH0aLoJGDSc3EWoOCmXQ9MkXH+irfMwxlHBa0GrFLoLl8AjHJ7iNuX7g7gu1ceGXFZ6A88tMse2ohAS2Eibw==");
 
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM9", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM6", 115200, Parity.None, 8, StopBits.One);
             serialPort1.Open();
 
             serialPort1.DataReceived += SerialPort1_DataReceived;
@@ -165,7 +165,14 @@ namespace InterfaceRobot
         }
 
 
-
+        private void buttonAsserv_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] payload = new byte[3];
+            payload[0] = (byte)1.1; //P
+            payload[1] = (byte)2.2; //I
+            payload[2] = (byte)3.3; //D
+            UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservicement, 3, payload);
+        }
 
         private void buttonTest_Click(object sender, RoutedEventArgs e)
         {
@@ -194,6 +201,8 @@ namespace InterfaceRobot
             payload = new byte[1];
             payload[0] = 34;
             UartEncodeAndSendMessage((int)MessageFunctions.SetRobotState, 1, payload);
+
+            
 
 
 
@@ -316,7 +325,7 @@ namespace InterfaceRobot
                     }
                     else
                     {
-                        receptionTextBox.Text += "/nERREUR/n";
+                        receptionTextBox.Text += "/n ERREUR /n";
                     }
                     rcvState = StateReception.Waiting;
                     break;
@@ -408,6 +417,7 @@ namespace InterfaceRobot
             SetRobotState = 0x0051,
             SetRobotMode = 0x0052,
             PositionData = 0x0061,
+            PIDAsservicement = 0x0063,
         }
 
         public enum StateRobot
@@ -465,7 +475,7 @@ namespace InterfaceRobot
             STATE_CELEBRATION_EN_COURS = 35,
         }
 
-
+        
     }
 }
 

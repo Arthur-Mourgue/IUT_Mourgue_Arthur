@@ -4,6 +4,7 @@
 #include "UART.h"
 #include "CB_TX1.h"
 #include "OS.h"
+#include "asservissement.h"
 
 enum MessageFunctions {
     TextMessage = 0x0080,
@@ -116,6 +117,9 @@ void UartProcessDecodedMessage(unsigned char function, unsigned char payloadLeng
             break;
         case SET_ROBOT_MANUAL_CONTROL:
             SetRobotAutoControlState(payload[0]);
+            break;
+        case SET_ROBOT_PID_ASSERVICEMENT:
+            SetupPidAsservissement(volatile PidCorrector* PidCorr, float Kp, float Ki, float Kd, double pro, double proportionelleMax, double integralMax, double deriveeMax) ;
             break;
         default:
             break;

@@ -18,6 +18,7 @@
 #define CheckSum 7
 
 #define SET_ROBOT_STATE 0x0051
+#define SET_ROBOT_PID_ASSERVICEMENT 0x0063
 #define SET_ROBOT_MANUAL_CONTROL 0x0052
 
 unsigned char UartCalculateChecksum(int msgFunction,int msgPayloadLength, unsigned char* msgPayload);
