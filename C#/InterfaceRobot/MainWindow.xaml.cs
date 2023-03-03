@@ -164,13 +164,35 @@ namespace InterfaceRobot
 
         }
 
-
+        
         private void buttonAsserv_Click(object sender, RoutedEventArgs e)
         {
-            byte[] payload = new byte[3];
-            payload[0] = (byte)1.1; //P
-            payload[1] = (byte)2.2; //I
-            payload[2] = (byte)3.3; //D
+
+            float Kp = 0;
+            float Ki = 0;
+            float Kd = 0;
+            float erreurProportionelleMax = 0;
+            float erreurIntegraleMax = 0;
+            float erreurDeriveeMax = 0;
+
+            byte[] tableauAsserv = new byte[25];
+
+
+            Array.Copy(BitConverter.GetBytes(Kp), 0, tableauAsserv, 1 ,4);
+            Array.Copy(BitConverter.GetBytes(Ki), 0, tableauAsserv, 5, 4);
+            Array.Copy(BitConverter.GetBytes(Kd), 0, tableauAsserv, 9, 4);
+            Array.Copy(BitConverter.GetBytes(erreurProportionelleMax), 0, tableauAsserv, 13, 4);
+            Array.Copy(BitConverter.GetBytes(erreurIntegraleMax), 0, tableauAsserv, 17, 4);
+            Array.Copy(BitConverter.GetBytes(erreurDeriveeMax), 0, tableauAsserv, 21, 4);
+
+
+
+
+
+
+
+
+
             UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservicement, 3, payload);
         }
 

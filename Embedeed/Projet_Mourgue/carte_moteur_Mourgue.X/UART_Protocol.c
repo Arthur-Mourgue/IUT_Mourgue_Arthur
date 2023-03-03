@@ -21,6 +21,11 @@ unsigned char msgDecodedPayload[128];
 int msgDecodedPayloadIndex = 0;
 unsigned char calculatedChecksum = 0;
 
+volatile PidCorrector* PidCorr ;
+float P ;
+float I ;
+float D ;
+
 unsigned char UartCalculateChecksum(int msgFunction, int msgPayloadLength, unsigned char* msgPayload) {
     //Fonction prenant entree la trame et sa longueur pour calculer le checksum
     unsigned char checksum = 0;
@@ -119,7 +124,7 @@ void UartProcessDecodedMessage(unsigned char function, unsigned char payloadLeng
             SetRobotAutoControlState(payload[0]);
             break;
         case SET_ROBOT_PID_ASSERVICEMENT:
-            SetupPidAsservissement(volatile PidCorrector* PidCorr, float Kp, float Ki, float Kd, double pro, double proportionelleMax, double integralMax, double deriveeMax) ;
+            void SetupPidAsservissement(volatile PidCorrector* PidCorr, payload[0], payload[1], payload[2], payload[3], payload[4], payload[5]);
             break;
         default:
             break;
