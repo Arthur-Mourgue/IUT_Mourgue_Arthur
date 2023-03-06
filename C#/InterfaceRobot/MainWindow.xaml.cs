@@ -42,7 +42,7 @@ namespace InterfaceRobot
             SciChartSurface.SetRuntimeLicenseKey("3veHyjwEIEQaDV8qd5l2Fi1mSsLic+DqdTuOS3i9xeOMjpqiWBdgmhBRMwHu9/5w2wXOHVOTWENlMvOMQjVNxg47zsEngF97+UN0UurixjoLk08HXwVNN2y2nYEhXWz63hbqsRmKHBDmtV95oK/rMODj+9r53ZO2qNGEHaR6InmuW3v9OjooV64GqiZXLYICip7TQR/f6sy3gEkVX4hYFJiWjBo7KEuIRbOXelmTRC0y2YYzDgOJacDbZ20LZdAhzt+zFY/aDjmqN3MXMqaZ8cAwWjx35KYKNJ02jvElvjD4T9wwM1wuuKEg9kvDmMvTWJjSzIOdGNB1vzmwNHkK4WRuoK2x5rsqZsWhTGsp728XR/xJoxAUrd71laBiwobq+BC5SaE1hufOgoH4Bh3tMs4c9tKo2TZ+j2gv1cIEEfYDQlUH0aLoJGDSc3EWoOCmXQ9MkXH+irfMwxlHBa0GrFLoLl8AjHJ7iNuX7g7gu1ceGXFZ6A88tMse2ohAS2Eibw==");
 
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM6", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM16", 115200, Parity.None, 8, StopBits.One);
             serialPort1.Open();
 
             serialPort1.DataReceived += SerialPort1_DataReceived;
@@ -167,33 +167,25 @@ namespace InterfaceRobot
         
         private void buttonAsserv_Click(object sender, RoutedEventArgs e)
         {
-
-            float Kp = 0;
-            float Ki = 0;
-            float Kd = 0;
-            float erreurProportionelleMax = 0;
-            float erreurIntegraleMax = 0;
-            float erreurDeriveeMax = 0;
+            robot.pidLin.Kp = 1;
+            robot.pidLin.Ki = 2;
+            robot.pidLin.Kd = 3;
+            robot.pidLin.erreurProportionelleMax = 4;
+            robot.pidLin.erreurIntegraleMax = 5;
+            robot.pidLin.erreurDeriveeMax = 6;
 
             byte[] tableauAsserv = new byte[25];
 
-
-            Array.Copy(BitConverter.GetBytes(Kp), 0, tableauAsserv, 1 ,4);
-            Array.Copy(BitConverter.GetBytes(Ki), 0, tableauAsserv, 5, 4);
-            Array.Copy(BitConverter.GetBytes(Kd), 0, tableauAsserv, 9, 4);
-            Array.Copy(BitConverter.GetBytes(erreurProportionelleMax), 0, tableauAsserv, 13, 4);
-            Array.Copy(BitConverter.GetBytes(erreurIntegraleMax), 0, tableauAsserv, 17, 4);
-            Array.Copy(BitConverter.GetBytes(erreurDeriveeMax), 0, tableauAsserv, 21, 4);
-
-
+            Array.Copy(BitConverter.GetBytes(robot.pidLin.Kp), 0, tableauAsserv, 0 ,4);
+            Array.Copy(BitConverter.GetBytes(robot.pidLin.Ki), 0, tableauAsserv, 4, 4);
+            Array.Copy(BitConverter.GetBytes(robot.pidLin.Kd), 0, tableauAsserv, 8, 4);
+            Array.Copy(BitConverter.GetBytes(robot.pidLin.erreurProportionelleMax), 0, tableauAsserv, 12, 4);
+            Array.Copy(BitConverter.GetBytes(robot.pidLin.erreurIntegraleMax), 0, tableauAsserv, 16, 4);
+            Array.Copy(BitConverter.GetBytes(robot.pidLin.erreurDeriveeMax), 0, tableauAsserv, 20, 4);
+            tableauAsserv[24] = 0;
 
 
-
-
-
-
-
-            UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservicement, 3, payload);
+            UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservicement, 25,tableauAsserv);
         }
 
         private void buttonTest_Click(object sender, RoutedEventArgs e)
@@ -398,23 +390,39 @@ namespace InterfaceRobot
                     break;
 
 
-                case MessageFunctions.SetRobotState:
+                case MessageFunctions.PIDAsservicement:
+
+                    var tabPID = BitConverter.ToSingle(msgPayload, 0);
+                    robot.pidLin.Kp = tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 4);
+                    robot.pidLin.Ki = tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 8);
+                    robot.pidLin.Kd = tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 12);
+                    robot.pidLin.erreurProportionelleMax = tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 16);
+                    robot.pidLin.erreurIntegraleMax = tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 20);
+                    robot.pidLin.erreurDeriveeMax = tabPID;
+                    int PidCor = msgPayload[24];
+
+
 
                     break;
 
                 case MessageFunctions.PositionData:
                     robot.TimerOdo = (((int)msgPayload[0]) << 24) + (((int)msgPayload[1]) << 16)
                     + (((int)msgPayload[2]) << 8) + ((int)msgPayload[3]);
-                    var tab = BitConverter.ToSingle(msgPayload, 4);
-                    robot.positionXOdo = tab;
-                    tab = BitConverter.ToSingle(msgPayload, 8);
-                    robot.positionYOdo = tab;
-                    tab = BitConverter.ToSingle(msgPayload, 12);
-                    robot.AngleROdo = tab;
-                    tab = BitConverter.ToSingle(msgPayload, 16);
-                    robot.VitesseAOdo = tab;
-                    tab = BitConverter.ToSingle(msgPayload, 20);
-                    robot.VitesseLOdo = tab;
+                    var tabPos = BitConverter.ToSingle(msgPayload, 4);
+                    robot.positionXOdo = tabPos;
+                    tabPos = BitConverter.ToSingle(msgPayload, 8);
+                    robot.positionYOdo = tabPos;
+                    tabPos = BitConverter.ToSingle(msgPayload, 12);
+                    robot.AngleROdo = tabPos;
+                    tabPos = BitConverter.ToSingle(msgPayload, 16);
+                    robot.VitesseAOdo = tabPos;
+                    tabPos = BitConverter.ToSingle(msgPayload, 20);
+                    robot.VitesseLOdo = tabPos;
                     TimerOdo.Content = robot.TimerOdo;
                     Position_X.Content = robot.positionXOdo;
                     Position_Y.Content = robot.positionYOdo;

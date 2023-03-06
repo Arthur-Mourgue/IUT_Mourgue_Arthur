@@ -5,12 +5,18 @@
 #include "CB_TX1.h"
 #include "OS.h"
 #include "asservissement.h"
+#include "Utilities.h"
+#include "Robot.h"
+
+float pKp,pKi,pKd,erP,erI,erD;
+unsigned char PidCor; 
 
 enum MessageFunctions {
     TextMessage = 0x0080,
     LEDValues = 0x0020,
     DistancesTelemetre = 0x0030,
     MotorSpeed = 0x0040,
+    PIDAsservicement = 0x0063 
 };
 
 unsigned char autoControlActivated = 1;
@@ -124,7 +130,21 @@ void UartProcessDecodedMessage(unsigned char function, unsigned char payloadLeng
             SetRobotAutoControlState(payload[0]);
             break;
         case SET_ROBOT_PID_ASSERVICEMENT:
-            void SetupPidAsservissement(volatile PidCorrector* PidCorr, payload[0], payload[1], payload[2], payload[3], payload[4], payload[5]);
+            
+            pKp = getFloat(payload, 0);
+            pKi = getFloat(payload, 4);
+            pKd = getFloat(payload, 8);
+            erP = getFloat(payload, 12);
+            erI = getFloat(payload, 16);
+            erD = getFloat(payload, 20);
+            PidCor = payload[24]; 
+            
+            if(PidCor == 0){
+                SetupPidAsservissement(&robotState.PidX, pKp, pKi, pKd, erP, erI, erD);
+            }
+            else{
+                SetupPidAsservissement(&robotState.PidTheta, pKp, pKi, pKd, erP, erI, erD);
+            }
             break;
         default:
             break;

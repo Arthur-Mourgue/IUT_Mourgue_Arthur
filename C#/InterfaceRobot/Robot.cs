@@ -20,10 +20,24 @@ namespace InterfaceRobot
         public float VitesseLOdo;
         public float TimerOdo;
 
+        public PID pidLin = new PID();
+        public PID pidAng = new PID();
+
         public Queue<byte> byteListReceived = new Queue<byte>();
         public Robot()
         {
             
         }
+    }
+
+    public class PID
+    {
+        public float Kp;
+        public float Ki;
+        public float Kd;
+        public float erreurProportionelleMax;
+        public float erreurIntegraleMax;
+        public float erreurDeriveeMax;
+
     }
 }
