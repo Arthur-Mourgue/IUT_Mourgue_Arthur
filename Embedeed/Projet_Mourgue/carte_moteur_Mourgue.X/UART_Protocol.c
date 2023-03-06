@@ -8,7 +8,7 @@
 #include "Utilities.h"
 #include "Robot.h"
 
-float pKp,pKi,pKd,erP,erI,erD;
+float LKp,LKi,LKd,LerrP,LerrI,LerrD,AKp,AKi,AKd,AerrP,AerrI,AerrD;
 unsigned char PidCor; 
 
 enum MessageFunctions {
@@ -131,20 +131,23 @@ void UartProcessDecodedMessage(unsigned char function, unsigned char payloadLeng
             break;
         case SET_ROBOT_PID_ASSERVICEMENT:
             
-            pKp = getFloat(payload, 0);
-            pKi = getFloat(payload, 4);
-            pKd = getFloat(payload, 8);
-            erP = getFloat(payload, 12);
-            erI = getFloat(payload, 16);
-            erD = getFloat(payload, 20);
-            PidCor = payload[24]; 
+            LKp = getFloat(payload, 0);
+            LKi = getFloat(payload, 4);
+            LKd = getFloat(payload, 8);
+            LerrP = getFloat(payload, 12);
+            LerrI = getFloat(payload, 16);
+            LerrD = getFloat(payload, 20);
             
-            if(PidCor == 0){
-                SetupPidAsservissement(&robotState.PidX, pKp, pKi, pKd, erP, erI, erD);
-            }
-            else{
-                SetupPidAsservissement(&robotState.PidTheta, pKp, pKi, pKd, erP, erI, erD);
-            }
+            AKp = getFloat(payload, 24);
+            AKi = getFloat(payload, 28);
+            AKd = getFloat(payload, 32);
+            AerrP = getFloat(payload, 36);
+            AerrI = getFloat(payload, 44);
+            AerrD = getFloat(payload, 48);
+            
+            SetupPidAsservissement(&robotState.PidX, LKp, LKi, LKd, LerrP, LerrI, LerrD);
+            SetupPidAsservissement(&robotState.PidX, AKp, AKi, AKd, AerrP, AerrI, AerrD);
+
             break;
         default:
             break;
