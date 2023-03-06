@@ -38,6 +38,11 @@ namespace InterfaceRobot
         public float erreurProportionelleMax;
         public float erreurIntegraleMax;
         public float erreurDeriveeMax;
-
+        public float erreur;
+        public float consigne;
+        public float command;
+        public float corr_P;
+        public float corr_I;
+        public float corr_D;
     }
 }

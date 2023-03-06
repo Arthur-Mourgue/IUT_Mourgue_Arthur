@@ -174,7 +174,15 @@ namespace InterfaceRobot
             robot.pidLin.erreurIntegraleMax = 5;
             robot.pidLin.erreurDeriveeMax = 6;
 
-            byte[] tableauAsserv = new byte[25];
+            robot.pidAng.Kp = 7;
+            robot.pidAng.Ki = 8;
+            robot.pidAng.Kd = 10;
+            robot.pidAng.erreurProportionelleMax = 11;
+            robot.pidAng.erreurIntegraleMax = 12;
+            robot.pidAng.erreurDeriveeMax = 13;
+
+
+            byte[] tableauAsserv = new byte[45];
 
             Array.Copy(BitConverter.GetBytes(robot.pidLin.Kp), 0, tableauAsserv, 0 ,4);
             Array.Copy(BitConverter.GetBytes(robot.pidLin.Ki), 0, tableauAsserv, 4, 4);
@@ -182,10 +190,16 @@ namespace InterfaceRobot
             Array.Copy(BitConverter.GetBytes(robot.pidLin.erreurProportionelleMax), 0, tableauAsserv, 12, 4);
             Array.Copy(BitConverter.GetBytes(robot.pidLin.erreurIntegraleMax), 0, tableauAsserv, 16, 4);
             Array.Copy(BitConverter.GetBytes(robot.pidLin.erreurDeriveeMax), 0, tableauAsserv, 20, 4);
-            tableauAsserv[24] = 0;
+
+            Array.Copy(BitConverter.GetBytes(robot.pidAng.Kp), 0, tableauAsserv, 24, 4);
+            Array.Copy(BitConverter.GetBytes(robot.pidAng.Ki), 0, tableauAsserv, 28, 4);
+            Array.Copy(BitConverter.GetBytes(robot.pidAng.Kd), 0, tableauAsserv, 32, 4);
+            Array.Copy(BitConverter.GetBytes(robot.pidAng.erreurProportionelleMax), 0, tableauAsserv, 36, 4);
+            Array.Copy(BitConverter.GetBytes(robot.pidAng.erreurIntegraleMax), 0, tableauAsserv, 40, 4);
+            Array.Copy(BitConverter.GetBytes(robot.pidAng.erreurDeriveeMax), 0, tableauAsserv, 44, 4);
 
 
-            UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservicement, 25,tableauAsserv);
+            UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservicement,45,tableauAsserv);
         }
 
         private void buttonTest_Click(object sender, RoutedEventArgs e)
@@ -404,7 +418,20 @@ namespace InterfaceRobot
                     robot.pidLin.erreurIntegraleMax = tabPID;
                     tabPID = BitConverter.ToSingle(msgPayload, 20);
                     robot.pidLin.erreurDeriveeMax = tabPID;
-                    int PidCor = msgPayload[24];
+                    tabPID = BitConverter.ToSingle(msgPayload, 24);
+                    robot.pidLin.erreur= tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 28);
+                    robot.pidLin.consigne = tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 32);
+                    robot.pidLin.corr_P = tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 36);
+                    robot.pidLin.corr_I = tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 40);
+                    robot.pidLin.corr_D = tabPID;
+                    tabPID = BitConverter.ToSingle(msgPayload, 44);
+                    robot.pidLin.command = tabPID;
+
+                    int PidCor = msgPayload[44];
 
 
 
