@@ -13,7 +13,7 @@ void InitQEI1();
 void InitQEI2();
 void SendPositionData();
 
-
+#define FREQ_ECH_QEI 250
 
 
 #endif	/* QEI_H */

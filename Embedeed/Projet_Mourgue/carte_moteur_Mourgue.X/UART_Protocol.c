@@ -145,8 +145,11 @@ void UartProcessDecodedMessage(unsigned char function, unsigned char payloadLeng
             AerrI = getFloat(payload, 44);
             AerrD = getFloat(payload, 48);
             
-            SetupPidAsservissement(&robotState.PidX, LKp, LKi, LKd, LerrP, LerrI, LerrD);
-            SetupPidAsservissement(&robotState.PidX, AKp, AKi, AKd, AerrP, AerrI, AerrD);
+            SetupPidAsservissement(&robotState.PidLineaire, LKp, LKi, LKd, LerrP, LerrI, LerrD);
+            SetupPidAsservissement(&robotState.PidAngulaire, AKp, AKi, AKd, AerrP, AerrI, AerrD);
+            
+            SendAsservissementConstant(&robotState.PidLineaire,PID_LINEAIRE);
+            SendAsservissementConstant(&robotState.PidAngulaire,PID_ANGULAIRE);
 
             break;
         default:

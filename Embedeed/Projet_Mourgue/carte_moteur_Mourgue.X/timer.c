@@ -7,6 +7,7 @@
 #include "main.h"
 #include "OS.h"
 #include "QEI.h"
+#include "Robot.h"
 
 unsigned char toggle = 0;
 
@@ -94,7 +95,11 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
 void __attribute__((interrupt, no_auto_psv)) _T4Interrupt(void) {
     IFS1bits.T4IF = 0;
     timestamp++;
-    if(timestamp%100 == 0)SendPositionData();
+    if(timestamp%100 == 0){
+        SendPositionData();
+        SendAsservissementVariables(&robotState.PidAngulaire, PID_ANGULAIRE);
+        SendAsservissementVariables(&robotState.PidLineaire, PID_LINEAIRE);
+    }
     OperatingSystemLoop();
 }
 

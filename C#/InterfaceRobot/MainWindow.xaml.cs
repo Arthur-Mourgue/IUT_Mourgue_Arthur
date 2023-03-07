@@ -182,7 +182,7 @@ namespace InterfaceRobot
             robot.pidAng.erreurDeriveeMax = 13;
 
 
-            byte[] tableauAsserv = new byte[45];
+            byte[] tableauAsserv = new byte[50];
 
             Array.Copy(BitConverter.GetBytes(robot.pidLin.Kp), 0, tableauAsserv, 0 ,4);
             Array.Copy(BitConverter.GetBytes(robot.pidLin.Ki), 0, tableauAsserv, 4, 4);
@@ -199,7 +199,7 @@ namespace InterfaceRobot
             Array.Copy(BitConverter.GetBytes(robot.pidAng.erreurDeriveeMax), 0, tableauAsserv, 44, 4);
 
 
-            UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservicement,45,tableauAsserv);
+            UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservissementVariables,45,tableauAsserv);
         }
 
         private void buttonTest_Click(object sender, RoutedEventArgs e)
@@ -403,37 +403,75 @@ namespace InterfaceRobot
                     "␣-␣" + instant.ToString() + "␣ms";
                     break;
 
-
-                case MessageFunctions.PIDAsservicement:
-
-                    var tabPID = BitConverter.ToSingle(msgPayload, 0);
-                    robot.pidLin.Kp = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 4);
-                    robot.pidLin.Ki = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 8);
-                    robot.pidLin.Kd = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 12);
-                    robot.pidLin.erreurProportionelleMax = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 16);
-                    robot.pidLin.erreurIntegraleMax = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 20);
-                    robot.pidLin.erreurDeriveeMax = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 24);
-                    robot.pidLin.erreur= tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 28);
-                    robot.pidLin.consigne = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 32);
-                    robot.pidLin.corr_P = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 36);
-                    robot.pidLin.corr_I = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 40);
-                    robot.pidLin.corr_D = tabPID;
-                    tabPID = BitConverter.ToSingle(msgPayload, 44);
-                    robot.pidLin.command = tabPID;
-
-                    int PidCor = msgPayload[44];
+                case MessageFunctions.PIDAsservissementConstant:
 
 
+                    if (msgPayload[0] == 0) //Lineraire
+                    {
+                        var tabPIDC = BitConverter.ToSingle(msgPayload, 0);
+                        robot.pidLin.Kp = tabPIDC;
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 4);
+                        robot.pidLin.Ki = tabPIDC;
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 8);
+                        robot.pidLin.Kd = tabPIDC;
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 12);
+                        robot.pidLin.erreurProportionelleMax = tabPIDC;
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 16);
+                        robot.pidLin.erreurIntegraleMax = tabPIDC;
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 20);
+                        robot.pidLin.erreurDeriveeMax = tabPIDC;
+
+                    }
+                    else if (msgPayload[0] == 1)
+                    {
+                        var tabPID = BitConverter.ToSingle(msgPayload, 0);
+                        robot.pidLin.Kp = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 4);
+                        robot.pidLin.Ki = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 8);
+                        robot.pidLin.Kd = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 12);
+                        robot.pidLin.erreurProportionelleMax = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 16);
+                        robot.pidLin.erreurIntegraleMax = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 20);
+                        robot.pidLin.erreurDeriveeMax = tabPID;
+                    }
+
+                    
+                    break;
+                case MessageFunctions.PIDAsservissementVariables:
+
+                    if (msgPayload[0] == 0) //Lineraire
+                    {
+                        var tabPID = BitConverter.ToSingle(msgPayload, 0);
+                        robot.pidLin.erreur = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 4);
+                        robot.pidLin.consigne = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 8);
+                        robot.pidLin.corr_P = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 12);
+                        robot.pidLin.corr_I = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 16);
+                        robot.pidLin.corr_D = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 20);
+                        robot.pidLin.command = tabPID;
+                    }
+                    else if (msgPayload[0] == 1)
+                    {
+                        var tabPID = BitConverter.ToSingle(msgPayload, 0);
+                        robot.pidAng.erreur = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 4);
+                        robot.pidAng.consigne = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 8);
+                        robot.pidAng.corr_P = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 12);
+                        robot.pidAng.corr_I = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 16);
+                        robot.pidAng.corr_D = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 20);
+                        robot.pidAng.command = tabPID;
+                    }
 
                     break;
 
@@ -474,7 +512,8 @@ namespace InterfaceRobot
             SetRobotState = 0x0051,
             SetRobotMode = 0x0052,
             PositionData = 0x0061,
-            PIDAsservicement = 0x0063,
+            PIDAsservissementVariables = 0x0063,
+            PIDAsservissementConstant = 0x0064,
         }
 
         public enum StateRobot

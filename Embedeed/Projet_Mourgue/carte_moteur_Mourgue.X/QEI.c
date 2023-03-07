@@ -10,7 +10,7 @@
 #include "timer.h"
 
 
-#define FREQ_ECH_QEI 250
+
 #define DISTROUES 281.2
 #define POSITION_DATA 0x0061
 double QeiDroitPosition_T_1;
