@@ -13,6 +13,7 @@ void InitQEI1();
 void InitQEI2();
 void SendPositionData();
 
+#define DISTROUES 0.2812
 #define FREQ_ECH_QEI 250
 
 

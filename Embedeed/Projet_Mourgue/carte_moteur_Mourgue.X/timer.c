@@ -97,10 +97,11 @@ void __attribute__((interrupt, no_auto_psv)) _T4Interrupt(void) {
     timestamp++;
     if(timestamp%100 == 0){
         SendPositionData();
+        UpdateAsservissement();
         SendAsservissementVariables(&robotState.PidAngulaire, PID_ANGULAIRE);
         SendAsservissementVariables(&robotState.PidLineaire, PID_LINEAIRE);
     }
-    OperatingSystemLoop();
+    //OperatingSystemLoop();
 }
 
 void SetFreqTimer1(float freq) {

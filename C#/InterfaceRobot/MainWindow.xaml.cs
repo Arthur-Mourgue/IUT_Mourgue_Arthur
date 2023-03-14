@@ -42,7 +42,7 @@ namespace InterfaceRobot
             SciChartSurface.SetRuntimeLicenseKey("3veHyjwEIEQaDV8qd5l2Fi1mSsLic+DqdTuOS3i9xeOMjpqiWBdgmhBRMwHu9/5w2wXOHVOTWENlMvOMQjVNxg47zsEngF97+UN0UurixjoLk08HXwVNN2y2nYEhXWz63hbqsRmKHBDmtV95oK/rMODj+9r53ZO2qNGEHaR6InmuW3v9OjooV64GqiZXLYICip7TQR/f6sy3gEkVX4hYFJiWjBo7KEuIRbOXelmTRC0y2YYzDgOJacDbZ20LZdAhzt+zFY/aDjmqN3MXMqaZ8cAwWjx35KYKNJ02jvElvjD4T9wwM1wuuKEg9kvDmMvTWJjSzIOdGNB1vzmwNHkK4WRuoK2x5rsqZsWhTGsp728XR/xJoxAUrd71laBiwobq+BC5SaE1hufOgoH4Bh3tMs4c9tKo2TZ+j2gv1cIEEfYDQlUH0aLoJGDSc3EWoOCmXQ9MkXH+irfMwxlHBa0GrFLoLl8AjHJ7iNuX7g7gu1ceGXFZ6A88tMse2ohAS2Eibw==");
 
             InitializeComponent();
-            serialPort1 = new ReliableSerialPort("COM16", 115200, Parity.None, 8, StopBits.One);
+            serialPort1 = new ReliableSerialPort("COM9", 115200, Parity.None, 8, StopBits.One);
             serialPort1.Open();
 
             serialPort1.DataReceived += SerialPort1_DataReceived;
@@ -82,7 +82,7 @@ namespace InterfaceRobot
             oscilloPos.ChangeLineColor(2, Color.FromRgb(0, 0, 255));
 
 
-            asservSpeedDisplay.UpdatePolarOdometrySpeed(robot.positionXOdo, robot.AngleROdo);
+            asservSpeedDisplay.UpdatePolarOdometrySpeed(robot.VitesseLOdo, robot.VitesseAOdo);
             asservSpeedDisplay.UpdateDisplay();
 
             while (robot.byteListReceived.Count() > 0)
@@ -167,19 +167,19 @@ namespace InterfaceRobot
         
         private void buttonAsserv_Click(object sender, RoutedEventArgs e)
         {
-            robot.pidLin.Kp = 1;
-            robot.pidLin.Ki = 2;
-            robot.pidLin.Kd = 3;
-            robot.pidLin.erreurProportionelleMax = 4;
-            robot.pidLin.erreurIntegraleMax = 5;
-            robot.pidLin.erreurDeriveeMax = 6;
+            robot.pidLin.Kp = 3;
+            robot.pidLin.Ki = 0;
+            robot.pidLin.Kd = 0;
+            robot.pidLin.erreurProportionelleMax = 1000;
+            robot.pidLin.erreurIntegraleMax = 1000;
+            robot.pidLin.erreurDeriveeMax = 1000;
 
-            robot.pidAng.Kp = 7;
-            robot.pidAng.Ki = 8;
-            robot.pidAng.Kd = 10;
-            robot.pidAng.erreurProportionelleMax = 11;
-            robot.pidAng.erreurIntegraleMax = 12;
-            robot.pidAng.erreurDeriveeMax = 13;
+            robot.pidAng.Kp = 0;
+            robot.pidAng.Ki = 0;
+            robot.pidAng.Kd = 0;
+            robot.pidAng.erreurProportionelleMax = 1000;
+            robot.pidAng.erreurIntegraleMax = 1000;
+            robot.pidAng.erreurDeriveeMax = 1000;
 
 
             byte[] tableauAsserv = new byte[50];
@@ -199,7 +199,7 @@ namespace InterfaceRobot
             Array.Copy(BitConverter.GetBytes(robot.pidAng.erreurDeriveeMax), 0, tableauAsserv, 44, 4);
 
 
-            UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservissementVariables,45,tableauAsserv);
+            UartEncodeAndSendMessage((int)MessageFunctions.PIDAsservissementVariables,50,tableauAsserv);
         }
 
         private void buttonTest_Click(object sender, RoutedEventArgs e)
@@ -408,70 +408,82 @@ namespace InterfaceRobot
 
                     if (msgPayload[0] == 0) //Lineraire
                     {
-                        var tabPIDC = BitConverter.ToSingle(msgPayload, 0);
+                        var tabPIDC = BitConverter.ToSingle(msgPayload, 1);
                         robot.pidLin.Kp = tabPIDC;
-                        tabPIDC = BitConverter.ToSingle(msgPayload, 4);
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 5);
                         robot.pidLin.Ki = tabPIDC;
-                        tabPIDC = BitConverter.ToSingle(msgPayload, 8);
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 9);
                         robot.pidLin.Kd = tabPIDC;
-                        tabPIDC = BitConverter.ToSingle(msgPayload, 12);
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 13);
                         robot.pidLin.erreurProportionelleMax = tabPIDC;
-                        tabPIDC = BitConverter.ToSingle(msgPayload, 16);
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 17);
                         robot.pidLin.erreurIntegraleMax = tabPIDC;
-                        tabPIDC = BitConverter.ToSingle(msgPayload, 20);
+                        tabPIDC = BitConverter.ToSingle(msgPayload, 21);
                         robot.pidLin.erreurDeriveeMax = tabPIDC;
 
                     }
                     else if (msgPayload[0] == 1)
                     {
-                        var tabPID = BitConverter.ToSingle(msgPayload, 0);
-                        robot.pidLin.Kp = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 4);
-                        robot.pidLin.Ki = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 8);
-                        robot.pidLin.Kd = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 12);
-                        robot.pidLin.erreurProportionelleMax = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 16);
-                        robot.pidLin.erreurIntegraleMax = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 20);
-                        robot.pidLin.erreurDeriveeMax = tabPID;
+                        var tabPID = BitConverter.ToSingle(msgPayload, 1);
+                        robot.pidAng.Kp = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 5);
+                        robot.pidAng.Ki = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 9);
+                        robot.pidAng.Kd = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 13);
+                        robot.pidAng.erreurProportionelleMax = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 17);
+                        robot.pidAng.erreurIntegraleMax = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 21);
+                        robot.pidAng.erreurDeriveeMax = tabPID;
+
                     }
 
-                    
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionGains(robot.pidLin.Kp, robot.pidAng.Kp, robot.pidLin.Ki, robot.pidAng.Ki, robot.pidLin.Kd, robot.pidAng.Kd);
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionLimits(robot.pidLin.erreurProportionelleMax, robot.pidAng.erreurProportionelleMax, robot.pidLin.erreurIntegraleMax, robot.pidAng.erreurIntegraleMax, robot.pidLin.erreurDeriveeMax, robot.pidAng.erreurDeriveeMax);
+                    asservSpeedDisplay.UpdatePolarSpeedCommandValues(robot.pidLin.command, robot.pidAng.command);
+                    asservSpeedDisplay.UpdatePolarSpeedConsigneValues(robot.pidLin.consigne, robot.pidAng.consigne);
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionValues(robot.pidLin.corr_P, robot.pidAng.corr_P, robot.pidLin.corr_I, robot.pidAng.corr_I, robot.pidLin.corr_D, robot.pidAng.corr_D);
+                    asservSpeedDisplay.UpdatePolarSpeedErrorValues(robot.pidLin.erreur, robot.pidAng.erreur);
+
+
                     break;
+
+
                 case MessageFunctions.PIDAsservissementVariables:
 
                     if (msgPayload[0] == 0) //Lineraire
                     {
-                        var tabPID = BitConverter.ToSingle(msgPayload, 0);
+                        var tabPID = BitConverter.ToSingle(msgPayload, 1);
                         robot.pidLin.erreur = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 4);
-                        robot.pidLin.consigne = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 8);
+                        tabPID = BitConverter.ToSingle(msgPayload, 5);
                         robot.pidLin.corr_P = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 12);
+                        tabPID = BitConverter.ToSingle(msgPayload, 9);
                         robot.pidLin.corr_I = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 16);
+                        tabPID = BitConverter.ToSingle(msgPayload, 13);
                         robot.pidLin.corr_D = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 20);
+                        tabPID = BitConverter.ToSingle(msgPayload, 17);
                         robot.pidLin.command = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 21);
+                        robot.pidLin.consigne = tabPID;
                     }
-                    else if (msgPayload[0] == 1)
+                    else if (msgPayload[0] == 1) // Angulaire
                     {
-                        var tabPID = BitConverter.ToSingle(msgPayload, 0);
+                        var tabPID = BitConverter.ToSingle(msgPayload, 1);
                         robot.pidAng.erreur = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 4);
-                        robot.pidAng.consigne = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 8);
+                        tabPID = BitConverter.ToSingle(msgPayload, 5);
                         robot.pidAng.corr_P = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 12);
+                        tabPID = BitConverter.ToSingle(msgPayload, 9);
                         robot.pidAng.corr_I = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 16);
+                        tabPID = BitConverter.ToSingle(msgPayload, 13);
                         robot.pidAng.corr_D = tabPID;
-                        tabPID = BitConverter.ToSingle(msgPayload, 20);
+                        tabPID = BitConverter.ToSingle(msgPayload, 17);
                         robot.pidAng.command = tabPID;
+                        tabPID = BitConverter.ToSingle(msgPayload, 21);
+                        robot.pidAng.consigne = tabPID;
                     }
+
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionValues(robot.pidLin.corr_P, robot.pidAng.corr_P, robot.pidLin.corr_I, robot.pidAng.corr_I, robot.pidLin.corr_D, robot.pidAng.corr_D);
 
                     break;
 
@@ -485,9 +497,9 @@ namespace InterfaceRobot
                     tabPos = BitConverter.ToSingle(msgPayload, 12);
                     robot.AngleROdo = tabPos;
                     tabPos = BitConverter.ToSingle(msgPayload, 16);
-                    robot.VitesseAOdo = tabPos;
-                    tabPos = BitConverter.ToSingle(msgPayload, 20);
                     robot.VitesseLOdo = tabPos;
+                    tabPos = BitConverter.ToSingle(msgPayload, 20);
+                    robot.VitesseAOdo = tabPos;
                     TimerOdo.Content = robot.TimerOdo;
                     Position_X.Content = robot.positionXOdo;
                     Position_Y.Content = robot.positionYOdo;

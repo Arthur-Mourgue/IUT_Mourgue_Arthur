@@ -142,8 +142,8 @@ void UartProcessDecodedMessage(unsigned char function, unsigned char payloadLeng
             AKi = getFloat(payload, 28);
             AKd = getFloat(payload, 32);
             AerrP = getFloat(payload, 36);
-            AerrI = getFloat(payload, 44);
-            AerrD = getFloat(payload, 48);
+            AerrI = getFloat(payload, 40);
+            AerrD = getFloat(payload, 44);
             
             SetupPidAsservissement(&robotState.PidLineaire, LKp, LKi, LKd, LerrP, LerrI, LerrD);
             SetupPidAsservissement(&robotState.PidAngulaire, AKp, AKi, AKd, AerrP, AerrI, AerrD);

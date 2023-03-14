@@ -11,7 +11,6 @@
 
 
 
-#define DISTROUES 281.2
 #define POSITION_DATA 0x0061
 double QeiDroitPosition_T_1;
 double QeiGauchePosition_T_1;
@@ -48,8 +47,8 @@ void QEIUpdateData() {
     long QEI2RawValue = POS2CNTL;
     QEI2RawValue += ((long) POS2HLD << 16);
     //Conversion en mm (r\?egl\?e pour la taille des roues codeuses)
-    QeiDroitPosition = 0.01620 * QEI1RawValue;
-    QeiGauchePosition = -0.01620 * QEI2RawValue;
+    QeiDroitPosition = 0.01620 * QEI1RawValue/1000;
+    QeiGauchePosition = -0.01620 * QEI2RawValue/1000;
     //Calcul des deltas de position
     delta_d = QeiDroitPosition - QeiDroitPosition_T_1;
     delta_g = QeiGauchePosition - QeiGauchePosition_T_1;

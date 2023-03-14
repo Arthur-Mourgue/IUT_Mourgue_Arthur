@@ -27,6 +27,8 @@ typedef struct _PidCorrector {
     float corrI;
     float corrD;
     
+    float command;
+    
      
 } PidCorrector;
 
