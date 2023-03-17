@@ -167,15 +167,15 @@ namespace InterfaceRobot
         
         private void buttonAsserv_Click(object sender, RoutedEventArgs e)
         {
-            robot.pidLin.Kp = 3;
-            robot.pidLin.Ki = 0;
+            robot.pidLin.Kp = 7;
+            robot.pidLin.Ki = 250;
             robot.pidLin.Kd = 0;
             robot.pidLin.erreurProportionelleMax = 1000;
             robot.pidLin.erreurIntegraleMax = 1000;
             robot.pidLin.erreurDeriveeMax = 1000;
 
-            robot.pidAng.Kp = 0;
-            robot.pidAng.Ki = 0;
+            robot.pidAng.Kp = 7;
+            robot.pidAng.Ki = 500;
             robot.pidAng.Kd = 0;
             robot.pidAng.erreurProportionelleMax = 1000;
             robot.pidAng.erreurIntegraleMax = 1000;

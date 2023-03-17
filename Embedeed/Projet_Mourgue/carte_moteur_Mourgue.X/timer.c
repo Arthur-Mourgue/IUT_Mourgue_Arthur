@@ -86,6 +86,7 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
     PWMUpdateSpeed();
     ADC1StartConversionSequence();
     QEIUpdateData();
+    UpdateAsservissement();
         
     LED_BLANCHE = !LED_BLANCHE;
 }
@@ -97,7 +98,6 @@ void __attribute__((interrupt, no_auto_psv)) _T4Interrupt(void) {
     timestamp++;
     if(timestamp%100 == 0){
         SendPositionData();
-        UpdateAsservissement();
         SendAsservissementVariables(&robotState.PidAngulaire, PID_ANGULAIRE);
         SendAsservissementVariables(&robotState.PidLineaire, PID_LINEAIRE);
     }
