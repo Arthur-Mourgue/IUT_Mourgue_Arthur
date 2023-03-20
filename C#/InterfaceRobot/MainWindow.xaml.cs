@@ -422,7 +422,7 @@ namespace InterfaceRobot
                         robot.pidLin.erreurDeriveeMax = tabPIDC;
 
                     }
-                    else if (msgPayload[0] == 1)
+                    else if (msgPayload[0] == 1) // Angulaire
                     {
                         var tabPID = BitConverter.ToSingle(msgPayload, 1);
                         robot.pidAng.Kp = tabPID;
